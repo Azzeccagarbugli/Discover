@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ping_discover_network/ping_discover_network.dart';
-import 'package:wifi/wifi.dart';
+import 'package:noise_meter/noise_meter.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.titilliumWebTextTheme(
+        textTheme: GoogleFonts.quicksandTextTheme(
           Theme.of(context).textTheme,
         ),
       ),
@@ -28,140 +29,121 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String localIp = '';
-  List<String> devices = [];
-  bool isDiscovering = false;
-  int found = -1;
-  TextEditingController portController = TextEditingController(text: '80');
+  bool _isRecording = false;
+  StreamSubscription<NoiseReading> _noiseSubscription;
+  NoiseMeter _noiseMeter;
 
-  void discover(BuildContext ctx) async {
-    setState(() {
-      isDiscovering = true;
-      devices.clear();
-      found = -1;
-    });
+  double _noiseDB = 0;
 
-    String ip;
-    try {
-      ip = await Wifi.ip;
-      print('local ip:\t$ip');
-    } catch (e) {
-      final snackBar = SnackBar(
-          content: Text('WiFi is not connected', textAlign: TextAlign.center));
-      Scaffold.of(ctx).showSnackBar(snackBar);
-      return;
-    }
-    setState(() {
-      localIp = ip;
-    });
+  final GlobalKey<AnimatedCircularChartState> _chartKey =
+      new GlobalKey<AnimatedCircularChartState>();
 
-    final String subnet = ip.substring(0, ip.lastIndexOf('.'));
-    int port = 80;
-    try {
-      port = int.parse(portController.text);
-    } catch (e) {
-      portController.text = port.toString();
-    }
-    print('subnet:\t$subnet, port:\t$port');
+  @override
+  void initState() {
+    super.initState();
+  }
 
-    final stream = NetworkAnalyzer.discover(subnet, port);
-
-    stream.listen((NetworkAddress addr) {
-      if (addr.exists) {
-        print('Found device: ${addr.ip}');
-        setState(() {
-          devices.add(addr.ip);
-          found = devices.length;
-        });
+  void onData(NoiseReading noiseReading) {
+    this.setState(() {
+      if (!this._isRecording) {
+        this._isRecording = true;
       }
-    })
-      ..onDone(() {
-        setState(() {
-          isDiscovering = false;
-          found = devices.length;
-        });
-      })
-      ..onError((dynamic e) {
-        final snackBar = SnackBar(
-            content: Text('Unexpected exception', textAlign: TextAlign.center));
-        Scaffold.of(ctx).showSnackBar(snackBar);
+      _noiseDB = noiseReading.db;
+    });
+  }
+
+  void startRecorder() async {
+    try {
+      _noiseMeter = new NoiseMeter();
+      _noiseSubscription = _noiseMeter.noiseStream.listen(onData);
+    } on NoiseMeterException catch (exception) {
+      print(exception);
+    }
+  }
+
+  void stopRecorder() async {
+    try {
+      if (_noiseSubscription != null) {
+        _noiseSubscription.cancel();
+        _noiseSubscription = null;
+      }
+      this.setState(() {
+        this._isRecording = false;
       });
+    } catch (err) {
+      print('stopRecorder error: $err');
+    }
+  }
+
+  void _cycleSamples() {
+    List<CircularStackEntry> nextData = <CircularStackEntry>[
+      _buildGraph(_noiseDB),
+    ];
+    setState(() {
+      _chartKey.currentState.updateData(nextData);
+    });
+  }
+
+  CircularStackEntry _buildGraph(double value) {
+    return CircularStackEntry(
+      <CircularSegmentEntry>[
+        new CircularSegmentEntry(
+          value,
+          Colors.blue[800],
+          rankKey: 'completed',
+        ),
+        new CircularSegmentEntry(
+          (100 - value),
+          Colors.blue[50],
+          rankKey: 'remaining',
+        ),
+      ],
+      rankKey: 'progress',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isRecording) {
+      _cycleSamples();
+    }
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Discover Local Network'),
-      ),
-      body: Builder(
-        builder: (BuildContext context) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                TextField(
-                  controller: portController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Port',
-                    hintText: 'Port',
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text('Local ip: $localIp', style: TextStyle(fontSize: 16)),
-                SizedBox(height: 15),
-                RaisedButton(
-                    child: Text(
-                        '${isDiscovering ? 'Discovering...' : 'Discover'}'),
-                    onPressed: isDiscovering ? null : () => discover(context)),
-                SizedBox(height: 15),
-                found >= 0
-                    ? Text('Found: $found device(s)',
-                        style: TextStyle(fontSize: 16))
-                    : Container(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: devices.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        children: <Widget>[
-                          Container(
-                            height: 60,
-                            padding: EdgeInsets.only(left: 10),
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: <Widget>[
-                                Icon(Icons.devices),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        '${devices[index]}:${portController.text}',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Icon(Icons.chevron_right),
-                              ],
-                            ),
-                          ),
-                          Divider(),
-                        ],
-                      );
-                    },
-                  ),
-                )
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            AnimatedCircularChart(
+              key: _chartKey,
+              size: Size(350, 350),
+              initialChartData: <CircularStackEntry>[
+                _buildGraph(_noiseDB),
               ],
+              chartType: CircularChartType.Radial,
+              edgeStyle: SegmentEdgeStyle.round,
+              percentageValues: true,
+              holeLabel: _noiseDB.truncate().toString() + " db",
+              labelStyle: GoogleFonts.quicksand(
+                textStyle: TextStyle(
+                  color: Colors.blue[800],
+                  fontSize: 62,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          );
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue[800],
+        onPressed: () {
+          if (!this._isRecording) {
+            return this.startRecorder();
+          }
+          this.stopRecorder();
         },
+        child: Icon(
+          this._isRecording ? Icons.stop : Icons.mic,
+        ),
       ),
     );
   }
