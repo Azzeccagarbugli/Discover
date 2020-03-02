@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:noise_meter/noise_meter.dart';
 
 void main() => runApp(MyApp());
@@ -34,6 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
   NoiseMeter _noiseMeter;
 
   double _noiseDB = 0;
+
+  int _selectedIndex = 0;
 
   final GlobalKey<AnimatedCircularChartState> _chartKey =
       new GlobalKey<AnimatedCircularChartState>();
@@ -109,24 +112,104 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: <Widget>[
-            AnimatedCircularChart(
-              key: _chartKey,
-              size: Size(350, 350),
-              initialChartData: <CircularStackEntry>[
-                _buildGraph(_noiseDB),
-              ],
-              chartType: CircularChartType.Radial,
-              edgeStyle: SegmentEdgeStyle.round,
-              percentageValues: true,
-              holeLabel: _noiseDB.truncate().toString() + " db",
-              labelStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                  color: Colors.blue[800],
-                  fontSize: 62,
-                  fontWeight: FontWeight.w700,
+            Center(
+              child: AnimatedCircularChart(
+                key: _chartKey,
+                size: Size(350, 350),
+                initialChartData: <CircularStackEntry>[
+                  _buildGraph(_noiseDB),
+                ],
+                chartType: CircularChartType.Radial,
+                edgeStyle: SegmentEdgeStyle.round,
+                percentageValues: true,
+                holeLabel: _noiseDB.truncate().toString() + " db",
+                labelStyle: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                    color: Colors.blue[800],
+                    fontSize: 62,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 36,
+              left: 18,
+              right: 18,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: new BorderRadius.circular(62),
+                  boxShadow: [
+                    BoxShadow(
+                      spreadRadius: -10,
+                      blurRadius: 60,
+                      color: Colors.black.withOpacity(.20),
+                      offset: Offset(0, 15),
+                    )
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18.0,
+                    vertical: 10,
+                  ),
+                  child: GNav(
+                      gap: 8,
+                      color: Colors.grey[800],
+                      activeColor: Colors.blue[800],
+                      iconSize: 24,
+                      // backgroundColor: Colors.black,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 5,
+                      ),
+                      duration: Duration(milliseconds: 800),
+                      tabs: [
+                        GButton(
+                          active: true,
+                          icon: Icons.hearing,
+                          text: 'Listen',
+                          textStyle: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              color: Colors.blue[800],
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          backgroundColor: Colors.blue[50],
+                        ),
+                        GButton(
+                          icon: Icons.library_books,
+                          text: 'Records',
+                          textStyle: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              color: Colors.blue[800],
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          backgroundColor: Colors.blue[50],
+                        ),
+                        GButton(
+                          icon: Icons.favorite,
+                          text: 'Search',
+                          textStyle: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              color: Colors.blue[800],
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          backgroundColor: Colors.blue[50],
+                        ),
+                      ],
+                      selectedIndex: _selectedIndex,
+                      onTabChange: (index) {
+                        print(index);
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      }),
                 ),
               ),
             ),
