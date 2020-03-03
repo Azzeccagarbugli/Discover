@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:noise_meter/noise_meter.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:spring_button/spring_button.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,10 +33,13 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   bool _isRecording = false;
   StreamSubscription<NoiseReading> _noiseSubscription;
   NoiseMeter _noiseMeter;
+
+  bool _micVisibility = true;
 
   double _noiseDB = 0;
   double _maxNoiseDB = 0;
@@ -45,9 +50,17 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<AnimatedCircularChartState> _chartKey =
       new GlobalKey<AnimatedCircularChartState>();
 
+  AnimationController _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      duration: const Duration(
+        milliseconds: 500,
+      ),
+      vsync: this,
+    )..forward();
   }
 
   void onData(NoiseReading noiseReading) {
@@ -84,8 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _cycleSamples() {
     List<CircularStackEntry> nextData = <CircularStackEntry>[
-      _buildGraphMinNoise(_minNoiseDB),
       _buildGraphMaxNoise(_maxNoiseDB),
+      _buildGraphMinNoise(_minNoiseDB),
       _buildGraphActualNoise(_noiseDB),
     ];
 
@@ -123,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
       <CircularSegmentEntry>[
         new CircularSegmentEntry(
           value,
-          Colors.red[800],
+          Colors.red,
           rankKey: 'completed',
         ),
         new CircularSegmentEntry(
@@ -141,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
       <CircularSegmentEntry>[
         new CircularSegmentEntry(
           value,
-          Colors.green[800],
+          Colors.green[400],
           rankKey: 'completed',
         ),
         new CircularSegmentEntry(
@@ -170,61 +183,143 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          Positioned.fill(child: AnimatedBackground()),
-          onBottom(AnimatedWave(
-            height: 180,
-            speed: 1.0,
-          )),
-          onBottom(AnimatedWave(
-            height: 120,
-            speed: 0.9,
-            offset: pi,
-          )),
-          onBottom(AnimatedWave(
-            height: 220,
-            speed: 1.2,
-            offset: pi / 2,
-          )),
+          // _isRecording
+          //     ? Positioned.fill(child: AnimatedBackground())
+          //     : SizedBox(),
+          _isRecording
+              ? onBottom(AnimatedWave(
+                  height: 280,
+                  speed: 1.0,
+                ))
+              : SizedBox(),
+          _isRecording
+              ? onBottom(AnimatedWave(
+                  height: 220,
+                  speed: 0.9,
+                  offset: pi,
+                ))
+              : SizedBox(),
+          _isRecording
+              ? onBottom(AnimatedWave(
+                  height: 380,
+                  speed: 1.2,
+                  offset: pi / 2,
+                ))
+              : SizedBox(),
           Center(
-            child: Container(
-              margin: const EdgeInsets.all(52),
-              decoration: new BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey[500],
-                    offset: Offset(4.0, 4.0),
-                    blurRadius: 15.0,
-                    spreadRadius: 1.0,
+            child: FlipCard(
+              speed: 70,
+              flipOnTouch: true,
+              onFlip: () {
+                setState(() {
+                  _micVisibility = !_micVisibility;
+                  _micVisibility
+                      ? _controller.forward()
+                      : _controller.reverse();
+                });
+              },
+              back: Container(
+                margin: const EdgeInsets.all(42),
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey[500],
+                      offset: Offset(4.0, 4.0),
+                      blurRadius: 15.0,
+                      spreadRadius: 1.0,
+                    ),
+                    BoxShadow(
+                      color: Colors.white,
+                      offset: Offset(-4.0, -4.0),
+                      blurRadius: 15.0,
+                      spreadRadius: 1.0,
+                    ),
+                  ],
+                ),
+                child: Container(
+                  height: 350,
+                  width: 350,
+                  child: Icon(
+                    Icons.linked_camera,
+                    size: 30,
                   ),
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(-4.0, -4.0),
-                    blurRadius: 15.0,
-                    spreadRadius: 1.0,
-                  ),
-                ],
+                ),
               ),
-              child: AnimatedCircularChart(
-                key: _chartKey,
-                size: Size(350, 350),
-                initialChartData: <CircularStackEntry>[
-                  _buildGraphMinNoise(_minNoiseDB),
-                  _buildGraphMaxNoise(_maxNoiseDB),
-                  _buildGraphActualNoise(_noiseDB),
-                ],
-                chartType: CircularChartType.Radial,
-                edgeStyle: SegmentEdgeStyle.round,
-                percentageValues: true,
-                // holeLabel: _noiseDB.truncate().toString() + " db",
-                // labelStyle: GoogleFonts.quicksand(
-                //   textStyle: TextStyle(
-                //     color: Colors.blue[800],
-                //     fontSize: 42,
-                //     fontWeight: FontWeight.w700,
-                //   ),
-                // ),
+              front: Container(
+                margin: const EdgeInsets.all(42),
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey[500],
+                      offset: Offset(4.0, 4.0),
+                      blurRadius: 15.0,
+                      spreadRadius: 1.0,
+                    ),
+                    BoxShadow(
+                      color: Colors.white,
+                      offset: Offset(-4.0, -4.0),
+                      blurRadius: 15.0,
+                      spreadRadius: 1.0,
+                    ),
+                  ],
+                ),
+                child: AnimatedCircularChart(
+                  key: _chartKey,
+                  size: Size(350, 350),
+                  initialChartData: <CircularStackEntry>[
+                    _buildGraphMaxNoise(_maxNoiseDB),
+                    _buildGraphMinNoise(_minNoiseDB),
+                    _buildGraphActualNoise(_noiseDB),
+                  ],
+                  chartType: CircularChartType.Radial,
+                  edgeStyle: SegmentEdgeStyle.round,
+                  percentageValues: true,
+                ),
+              ),
+            ),
+          ),
+          ScaleTransition(
+            scale: _controller,
+            child: Center(
+              child: SpringButton(
+                SpringButtonType.OnlyScale,
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: new BoxDecoration(
+                    color: this._isRecording ? Colors.red[600] : Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey[500],
+                        offset: Offset(4.0, 4.0),
+                        blurRadius: 15.0,
+                        spreadRadius: 1.0,
+                      ),
+                      BoxShadow(
+                        color: Colors.white,
+                        offset: Offset(-4.0, -4.0),
+                        blurRadius: 15.0,
+                        spreadRadius: 1.0,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    this._isRecording ? Icons.mic_off : Icons.mic,
+                    color: this._isRecording ? Colors.white : Colors.blue[800],
+                    size: 64,
+                  ),
+                ),
+                onTap: () {
+                  if (!this._isRecording) {
+                    return this.startRecorder();
+                  }
+                  this.stopRecorder();
+                },
+                useCache: false,
               ),
             ),
           ),
@@ -247,7 +342,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 18.0,
+                  horizontal: 12.0,
                   vertical: 10,
                 ),
                 child: GNav(
@@ -278,12 +373,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       GButton(
                         icon: Icons.library_books,
-                        text: 'Records',
+                        text: 'Tracks',
                         backgroundColor: Colors.blue[50],
                       ),
                       GButton(
                         icon: Icons.favorite,
-                        text: 'Search',
+                        text: 'Saved',
+                        backgroundColor: Colors.blue[50],
+                      ),
+                      GButton(
+                        icon: Icons.settings,
+                        text: 'Settings',
                         backgroundColor: Colors.blue[50],
                       ),
                     ],
@@ -299,18 +399,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue[800],
-        onPressed: () {
-          if (!this._isRecording) {
-            return this.startRecorder();
-          }
-          this.stopRecorder();
-        },
-        child: Icon(
-          this._isRecording ? Icons.stop : Icons.mic,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Colors.blue[800],
+      //   onPressed: () {
+      //     if (!this._isRecording) {
+      //       return this.startRecorder();
+      //     }
+      //     this.stopRecorder();
+      //   },
+      //   child: Icon(
+      //     this._isRecording ? Icons.stop : Icons.mic,
+      //   ),
+      // ),
     );
   }
 }
@@ -332,10 +432,15 @@ class AnimatedBackground extends StatelessWidget {
       builder: (context, animation) {
         return Container(
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [animation["color1"], animation["color2"]])),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                animation["color1"],
+                animation["color2"],
+              ],
+            ),
+          ),
         );
       },
     );
@@ -376,7 +481,7 @@ class CurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final white = Paint()..color = Colors.white.withAlpha(60);
+    final white = Paint()..color = Colors.blue[100].withAlpha(60);
     final path = Path();
 
     final y1 = sin(value);
