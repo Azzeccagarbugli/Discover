@@ -47,6 +47,8 @@ class _MyHomePageState extends State<MyHomePage>
 
   int _selectedIndex = 0;
 
+  Color color = Colors.blue[100].withAlpha(60);
+
   final GlobalKey<AnimatedCircularChartState> _chartKey =
       new GlobalKey<AnimatedCircularChartState>();
 
@@ -167,18 +169,27 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
+  onBottom(Widget child) => Positioned.fill(
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: child,
+        ),
+      );
+
+  void _setColor(double value) {
+    if (value > 90) {
+      color = Colors.red[700].withAlpha(60);
+    } else {
+      color = Colors.blue[100].withAlpha(60);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isRecording) {
       _cycleSamples();
+      _setColor(_noiseDB);
     }
-
-    onBottom(Widget child) => Positioned.fill(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: child,
-          ),
-        );
 
     return Scaffold(
       body: Stack(
@@ -187,142 +198,195 @@ class _MyHomePageState extends State<MyHomePage>
           //     ? Positioned.fill(child: AnimatedBackground())
           //     : SizedBox(),
           _isRecording
-              ? onBottom(AnimatedWave(
-                  height: 280,
-                  speed: 1.0,
-                ))
+              ? onBottom(
+                  AnimatedWave(height: _noiseDB * 2, speed: 1.0, color: color))
               : SizedBox(),
           _isRecording
               ? onBottom(AnimatedWave(
-                  height: 220,
+                  height: (_minNoiseDB + 20) * 3,
                   speed: 0.9,
                   offset: pi,
+                  color: color,
                 ))
               : SizedBox(),
           _isRecording
               ? onBottom(AnimatedWave(
-                  height: 380,
+                  height: _maxNoiseDB * 2.5,
                   speed: 1.2,
                   offset: pi / 2,
+                  color: color,
                 ))
               : SizedBox(),
           Center(
             child: FlipCard(
-              speed: 70,
               flipOnTouch: true,
-              onFlip: () {
-                setState(() {
-                  _micVisibility = !_micVisibility;
-                  _micVisibility
-                      ? _controller.forward()
-                      : _controller.reverse();
-                });
-              },
-              back: Container(
-                margin: const EdgeInsets.all(42),
-                decoration: new BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[500],
-                      offset: Offset(4.0, 4.0),
-                      blurRadius: 15.0,
-                      spreadRadius: 1.0,
-                    ),
-                    BoxShadow(
-                      color: Colors.white,
-                      offset: Offset(-4.0, -4.0),
-                      blurRadius: 15.0,
-                      spreadRadius: 1.0,
-                    ),
-                  ],
-                ),
-                child: Container(
-                  height: 350,
-                  width: 350,
-                  child: Icon(
-                    Icons.linked_camera,
-                    size: 30,
-                  ),
-                ),
-              ),
-              front: Container(
-                margin: const EdgeInsets.all(42),
-                decoration: new BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[500],
-                      offset: Offset(4.0, 4.0),
-                      blurRadius: 15.0,
-                      spreadRadius: 1.0,
-                    ),
-                    BoxShadow(
-                      color: Colors.white,
-                      offset: Offset(-4.0, -4.0),
-                      blurRadius: 15.0,
-                      spreadRadius: 1.0,
-                    ),
-                  ],
-                ),
-                child: AnimatedCircularChart(
-                  key: _chartKey,
-                  size: Size(350, 350),
-                  initialChartData: <CircularStackEntry>[
-                    _buildGraphMaxNoise(_maxNoiseDB),
-                    _buildGraphMinNoise(_minNoiseDB),
-                    _buildGraphActualNoise(_noiseDB),
-                  ],
-                  chartType: CircularChartType.Radial,
-                  edgeStyle: SegmentEdgeStyle.round,
-                  percentageValues: true,
-                ),
-              ),
-            ),
-          ),
-          ScaleTransition(
-            scale: _controller,
-            child: Center(
-              child: SpringButton(
-                SpringButtonType.OnlyScale,
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: new BoxDecoration(
-                    color: this._isRecording ? Colors.red[600] : Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey[500],
-                        offset: Offset(4.0, 4.0),
-                        blurRadius: 15.0,
-                        spreadRadius: 1.0,
-                      ),
-                      BoxShadow(
+              back: Stack(
+                children: <Widget>[
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.all(42),
+                      decoration: new BoxDecoration(
                         color: Colors.white,
-                        offset: Offset(-4.0, -4.0),
-                        blurRadius: 15.0,
-                        spreadRadius: 1.0,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey[500],
+                            offset: Offset(4.0, 4.0),
+                            blurRadius: 15.0,
+                            spreadRadius: 1.0,
+                          ),
+                          BoxShadow(
+                            color: Colors.white,
+                            offset: Offset(-4.0, -4.0),
+                            blurRadius: 15.0,
+                            spreadRadius: 1.0,
+                          ),
+                        ],
                       ),
-                    ],
+                      child: Container(
+                        height: 350,
+                        width: 350,
+                        child: Icon(
+                          Icons.linked_camera,
+                          size: 30,
+                        ),
+                      ),
+                    ),
                   ),
-                  child: Icon(
-                    this._isRecording ? Icons.mic_off : Icons.mic,
-                    color: this._isRecording ? Colors.white : Colors.blue[800],
-                    size: 64,
+                  ScaleTransition(
+                    scale: _controller,
+                    child: Center(
+                      child: SpringButton(
+                        SpringButtonType.OnlyScale,
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: new BoxDecoration(
+                            color: this._isRecording
+                                ? Colors.red[600]
+                                : Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[500],
+                                offset: Offset(4.0, 4.0),
+                                blurRadius: 15.0,
+                                spreadRadius: 1.0,
+                              ),
+                              BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(-4.0, -4.0),
+                                blurRadius: 15.0,
+                                spreadRadius: 1.0,
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            this._isRecording ? Icons.mic_off : Icons.mic,
+                            color: this._isRecording
+                                ? Colors.white
+                                : Colors.blue[800],
+                            size: 64,
+                          ),
+                        ),
+                        onTap: () {
+                          if (!this._isRecording) {
+                            return this.startRecorder();
+                          }
+                          this.stopRecorder();
+                        },
+                        useCache: false,
+                      ),
+                    ),
                   ),
-                ),
-                onTap: () {
-                  if (!this._isRecording) {
-                    return this.startRecorder();
-                  }
-                  this.stopRecorder();
-                },
-                useCache: false,
+                ],
+              ),
+              front: Stack(
+                children: <Widget>[
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.all(42),
+                      decoration: new BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey[500],
+                            offset: Offset(4.0, 4.0),
+                            blurRadius: 15.0,
+                            spreadRadius: 1.0,
+                          ),
+                          BoxShadow(
+                            color: Colors.white,
+                            offset: Offset(-4.0, -4.0),
+                            blurRadius: 15.0,
+                            spreadRadius: 1.0,
+                          ),
+                        ],
+                      ),
+                      child: AnimatedCircularChart(
+                        key: _chartKey,
+                        size: Size(350, 350),
+                        initialChartData: <CircularStackEntry>[
+                          _buildGraphMaxNoise(_maxNoiseDB),
+                          _buildGraphMinNoise(_minNoiseDB),
+                          _buildGraphActualNoise(_noiseDB),
+                        ],
+                        chartType: CircularChartType.Radial,
+                        edgeStyle: SegmentEdgeStyle.round,
+                        percentageValues: true,
+                      ),
+                    ),
+                  ),
+                  ScaleTransition(
+                    scale: _controller,
+                    child: Center(
+                      child: SpringButton(
+                        SpringButtonType.OnlyScale,
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: new BoxDecoration(
+                            color: this._isRecording
+                                ? Colors.red[600]
+                                : Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[500],
+                                offset: Offset(4.0, 4.0),
+                                blurRadius: 15.0,
+                                spreadRadius: 1.0,
+                              ),
+                              BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(-4.0, -4.0),
+                                blurRadius: 15.0,
+                                spreadRadius: 1.0,
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            this._isRecording ? Icons.mic_off : Icons.mic,
+                            color: this._isRecording
+                                ? Colors.white
+                                : Colors.blue[800],
+                            size: 64,
+                          ),
+                        ),
+                        onTap: () {
+                          if (!this._isRecording) {
+                            return this.startRecorder();
+                          }
+                          this.stopRecorder();
+                        },
+                        useCache: false,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+
           Positioned(
             bottom: 36,
             left: 24,
@@ -451,8 +515,14 @@ class AnimatedWave extends StatelessWidget {
   final double height;
   final double speed;
   final double offset;
+  final Color color;
 
-  AnimatedWave({this.height, this.speed, this.offset = 0.0});
+  AnimatedWave({
+    this.height,
+    this.speed,
+    this.offset = 0.0,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -461,14 +531,15 @@ class AnimatedWave extends StatelessWidget {
         height: height,
         width: constraints.biggest.width,
         child: ControlledAnimation(
-            playback: Playback.LOOP,
-            duration: Duration(milliseconds: (5000 / speed).round()),
-            tween: Tween(begin: 0.0, end: 2 * pi),
-            builder: (context, value) {
-              return CustomPaint(
-                foregroundPainter: CurvePainter(value + offset),
-              );
-            }),
+          playback: Playback.LOOP,
+          duration: Duration(milliseconds: (5000 / speed).round()),
+          tween: Tween(begin: 0.0, end: 2 * pi),
+          builder: (context, value) {
+            return CustomPaint(
+              foregroundPainter: CurvePainter(value + offset, color),
+            );
+          },
+        ),
       );
     });
   }
@@ -476,12 +547,13 @@ class AnimatedWave extends StatelessWidget {
 
 class CurvePainter extends CustomPainter {
   final double value;
+  final Color color;
 
-  CurvePainter(this.value);
+  CurvePainter(this.value, this.color);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final white = Paint()..color = Colors.blue[100].withAlpha(60);
+    final white = Paint()..color = this.color;
     final path = Path();
 
     final y1 = sin(value);
