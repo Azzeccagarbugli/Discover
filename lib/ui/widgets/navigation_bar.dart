@@ -19,11 +19,17 @@ class CustomBottomNavigationBar extends StatelessWidget {
         borderRadius: new BorderRadius.circular(62),
         boxShadow: [
           BoxShadow(
-            spreadRadius: -10,
-            blurRadius: 60,
-            color: Colors.black.withOpacity(.20),
-            offset: Offset(0, 15),
-          )
+            color: Colors.grey[500],
+            offset: Offset(4.0, 4.0),
+            blurRadius: 15.0,
+            spreadRadius: 1.0,
+          ),
+          BoxShadow(
+            color: Colors.white,
+            offset: Offset(-4.0, -4.0),
+            blurRadius: 15.0,
+            spreadRadius: 1.0,
+          ),
         ],
       ),
       child: Padding(
@@ -72,7 +78,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ],
           selectedIndex: selectedIndex,
           onTabChange: (index) {
-            print(index);
             changeIndex(index);
           },
         ),

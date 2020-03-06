@@ -42,7 +42,7 @@ class CurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final white = Paint()..color = Colors.blue[100].withAlpha(60);
+    final color = Paint()..color = Colors.blue[100].withAlpha(60);
     final path = Path();
 
     final y1 = sin(value);
@@ -53,13 +53,13 @@ class CurvePainter extends CustomPainter {
     final controlPointY = size.height * (0.5 + 0.4 * y2);
     final endPointY = size.height * (0.5 + 0.4 * y3);
 
-    path.moveTo(size.width * 0, startPointY);
+    path.moveTo(0, startPointY);
     path.quadraticBezierTo(
         size.width * 0.5, controlPointY, size.width, endPointY);
     path.lineTo(size.width, size.height);
     path.lineTo(0, size.height);
     path.close();
-    canvas.drawPath(path, white);
+    canvas.drawPath(path, color);
   }
 
   @override

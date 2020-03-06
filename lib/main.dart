@@ -6,6 +6,7 @@ import 'package:Discover/ui/widgets/flip_card/flip_card_controller.dart';
 import 'package:Discover/ui/widgets/navigation_bar.dart';
 import 'package:Discover/ui/widgets/waves.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 
 import 'package:noise_meter/noise_meter.dart';
@@ -18,6 +19,14 @@ class Discover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
     return ThemeProvider(
       themes: [
         _customTheme.getLight(),
@@ -37,8 +46,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   bool _isRecording = false;
   StreamSubscription<NoiseReading> _noiseSubscription;
   NoiseMeter _noiseMeter;
@@ -49,20 +57,29 @@ class _MyHomePageState extends State<MyHomePage>
 
   int _selectedIndex = 0;
 
+  bool _updateValue = true;
+
   final GlobalKey<AnimatedCircularChartState> _chartKey =
       new GlobalKey<AnimatedCircularChartState>();
 
-  AnimationController _controller;
+  AnimationController _controllerPopUpButton;
+  AnimationController _controllerFadeWave;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _controllerPopUpButton = AnimationController(
       duration: const Duration(
         milliseconds: 500,
       ),
       vsync: this,
     )..forward();
+    _controllerFadeWave = AnimationController(
+      duration: const Duration(
+        milliseconds: 400,
+      ),
+      vsync: this,
+    );
   }
 
   void onData(NoiseReading noiseReading) {
@@ -99,6 +116,11 @@ class _MyHomePageState extends State<MyHomePage>
 
   void _cycleSamples() {
     setState(() {
+      if (_updateValue) {
+        _minNoiseDB = _noiseDB;
+        _updateValue = false;
+      }
+
       if (_noiseDB > _maxNoiseDB) {
         _maxNoiseDB = _noiseDB;
       }
@@ -108,41 +130,43 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
-  onBottom(Widget child) => Positioned.fill(
-        child: Align(
-          alignment: Alignment.bottomCenter,
+  Widget onBottom(Widget child) {
+    return Positioned.fill(
+      child: Align(
+        alignment: Alignment.center,
+        child: FadeTransition(
+          opacity: _controllerFadeWave,
           child: child,
         ),
-      );
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     if (_isRecording) {
       _cycleSamples();
+      _controllerFadeWave.forward();
+    } else {
+      _controllerFadeWave.reverse();
     }
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          _isRecording
-              ? onBottom(AnimatedWave(
-                  height: 220,
-                  speed: 1.0,
-                ))
-              : SizedBox(),
-          _isRecording
-              ? onBottom(AnimatedWave(
-                  height: 240,
-                  speed: 0.9,
-                  offset: pi,
-                ))
-              : SizedBox(),
-          _isRecording
-              ? onBottom(AnimatedWave(
-                  height: 180,
-                  speed: 1.2,
-                  offset: pi / 2,
-                ))
-              : SizedBox(),
+          onBottom(AnimatedWave(
+            height: 220,
+            speed: 1.0,
+          )),
+          onBottom(AnimatedWave(
+            height: 240,
+            speed: 0.9,
+            offset: pi,
+          )),
+          onBottom(AnimatedWave(
+            height: 180,
+            speed: 1.2,
+            offset: pi / 2,
+          )),
           Center(
             child: FlipCardController(
               chartKey: _chartKey,
@@ -150,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage>
               minNoiseDB: _minNoiseDB,
               noiseDB: _noiseDB,
               isRecording: _isRecording,
-              controller: _controller,
+              controller: _controllerPopUpButton,
               onTap: () {
                 if (!this._isRecording) {
                   return this.startRecorder();

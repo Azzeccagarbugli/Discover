@@ -36,7 +36,9 @@ class FlipCardController extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlipCard(
       flipOnTouch: true,
-      back: BackFlipCard(),
+      back: BackFlipCard(
+        value: _noiseDB,
+      ),
       front: FrontFlipCard(
         chartKey: _chartKey,
         maxNoiseDB: _maxNoiseDB,
