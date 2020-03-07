@@ -105,8 +105,11 @@ class _HomepageViewState extends State<HomepageView>
     });
   }
 
-  Widget onBottom(Widget child) {
-    return Positioned.fill(
+  Widget _onBottom(Widget child) {
+    return Positioned(
+      left: 0,
+      right: 0,
+      top: MediaQuery.of(context).size.height / 2,
       child: Align(
         alignment: Alignment.center,
         child: FadeTransition(
@@ -129,18 +132,19 @@ class _HomepageViewState extends State<HomepageView>
       body: Container(
         child: Stack(
           children: <Widget>[
-            onBottom(AnimatedWave(
+            _onBottom(AnimatedWave(
               height: 220,
-              speed: 1.0,
+              speed: 0.2,
+              offset: 1,
             )),
-            onBottom(AnimatedWave(
+            _onBottom(AnimatedWave(
               height: 240,
               speed: 0.9,
               offset: pi,
             )),
-            onBottom(AnimatedWave(
+            _onBottom(AnimatedWave(
               height: 180,
-              speed: 1.2,
+              speed: 0.4,
               offset: pi / 2,
             )),
             Center(
