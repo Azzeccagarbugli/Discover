@@ -51,6 +51,9 @@ class _HomepageViewState extends State<HomepageView>
   void dispose() {
     _controllerFadeWave.dispose();
     _controllerPopUpButton.dispose();
+    if (_noiseSubscription != null) {
+      _noiseSubscription.cancel();
+    }
     super.dispose();
   }
 
