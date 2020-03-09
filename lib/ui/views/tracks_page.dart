@@ -10,7 +10,7 @@ class _TracksViewState extends State<TracksView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.amber,
+        color: Colors.white,
         child: Center(
           child: Icon(Icons.library_books),
         ),
