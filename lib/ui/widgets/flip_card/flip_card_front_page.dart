@@ -1,6 +1,7 @@
 import 'package:Discover/ui/widgets/graph.dart';
 import 'package:flutter/material.dart';
 import 'package:spring_button/spring_button.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class FrontFlipCard extends StatelessWidget {
   const FrontFlipCard({
@@ -36,19 +37,25 @@ class FrontFlipCard extends StatelessWidget {
         Center(
           child: Container(
             margin: const EdgeInsets.all(42),
-            decoration: new BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: ThemeProvider.themeOf(context).id == "light_theme"
+                  ? Colors.white
+                  : Colors.grey[900],
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey[500],
-                  offset: Offset(4.0, 4.0),
+                  color: ThemeProvider.themeOf(context).id == "light_theme"
+                      ? Colors.grey[500]
+                      : Colors.black87,
+                  offset: Offset(5.0, 5.0),
                   blurRadius: 15.0,
                   spreadRadius: 1.0,
                 ),
                 BoxShadow(
-                  color: Colors.white,
-                  offset: Offset(-4.0, -4.0),
+                  color: ThemeProvider.themeOf(context).id == "light_theme"
+                      ? Colors.white
+                      : Colors.grey[850],
+                  offset: Offset(-5.0, -5.0),
                   blurRadius: 15.0,
                   spreadRadius: 1.0,
                 ),

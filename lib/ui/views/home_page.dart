@@ -6,6 +6,7 @@ import 'package:Discover/ui/widgets/waves.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:noise_meter/noise_meter.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class HomepageView extends StatefulWidget {
   @override
@@ -129,6 +130,8 @@ class _HomepageViewState extends State<HomepageView>
       _controllerFadeWave.reverse();
     }
     return Scaffold(
+      backgroundColor:
+          ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
       body: Container(
         child: Stack(
           children: <Widget>[

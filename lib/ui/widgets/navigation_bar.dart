@@ -15,18 +15,24 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: ThemeProvider.themeOf(context).id == "light_theme"
+            ? Colors.white
+            : Colors.grey[900],
         borderRadius: new BorderRadius.circular(62),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey[500],
-            offset: Offset(4.0, 4.0),
+            color: ThemeProvider.themeOf(context).id == "light_theme"
+                ? Colors.grey[500]
+                : Colors.black87,
+            offset: Offset(5.0, 5.0),
             blurRadius: 15.0,
             spreadRadius: 1.0,
           ),
           BoxShadow(
-            color: Colors.white,
-            offset: Offset(-4.0, -4.0),
+            color: ThemeProvider.themeOf(context).id == "light_theme"
+                ? Colors.white
+                : Colors.grey[850],
+            offset: Offset(-5.0, -5.0),
             blurRadius: 15.0,
             spreadRadius: 1.0,
           ),
@@ -39,12 +45,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
         ),
         child: GNav(
           gap: 8,
+          activeColor: ThemeProvider.themeOf(context).data.primaryColor,
           textStyle: TextStyle(
-            color: ThemeProvider.themeOf(context).data.primaryColor,
+            color: ThemeProvider.themeOf(context).data.textSelectionColor,
             fontWeight: FontWeight.w700,
           ),
           color: Colors.grey[800],
-          activeColor: ThemeProvider.themeOf(context).data.primaryColor,
           iconSize: 24,
           padding: EdgeInsets.symmetric(
             horizontal: 20,
@@ -58,22 +64,30 @@ class CustomBottomNavigationBar extends StatelessWidget {
               active: true,
               icon: Icons.hearing,
               text: 'Listen',
-              backgroundColor: Colors.blue[50],
+              iconActiveColor:
+                  ThemeProvider.themeOf(context).data.textSelectionColor,
+              backgroundColor: ThemeProvider.themeOf(context).data.primaryColor,
             ),
             GButton(
               icon: Icons.library_books,
               text: 'Tracks',
-              backgroundColor: Colors.blue[50],
+              iconActiveColor:
+                  ThemeProvider.themeOf(context).data.textSelectionColor,
+              backgroundColor: ThemeProvider.themeOf(context).data.primaryColor,
             ),
             GButton(
               icon: Icons.favorite,
               text: 'Saved',
-              backgroundColor: Colors.blue[50],
+              iconActiveColor:
+                  ThemeProvider.themeOf(context).data.textSelectionColor,
+              backgroundColor: ThemeProvider.themeOf(context).data.primaryColor,
             ),
             GButton(
               icon: Icons.settings,
               text: 'Settings',
-              backgroundColor: Colors.blue[50],
+              iconActiveColor:
+                  ThemeProvider.themeOf(context).data.textSelectionColor,
+              backgroundColor: ThemeProvider.themeOf(context).data.primaryColor,
             ),
           ],
           selectedIndex: selectedIndex,

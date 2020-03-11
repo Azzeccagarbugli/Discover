@@ -12,18 +12,10 @@ class Discover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ),
-    );
     return ThemeProvider(
       themes: [
-        _customTheme.getLight(),
         _customTheme.getDark(),
+        _customTheme.getLight(),
       ],
       child: MaterialApp(
         home: ThemeConsumer(

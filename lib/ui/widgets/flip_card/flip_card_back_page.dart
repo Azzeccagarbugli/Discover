@@ -64,10 +64,6 @@ class TapeDisk extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(42),
             decoration: new BoxDecoration(
-              border: Border.all(
-                color: Colors.grey[900],
-                width: 6,
-              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey[500],
@@ -96,7 +92,6 @@ class TapeDisk extends StatelessWidget {
                   Colors.grey[800],
                   Colors.grey[600]
                 ],
-                tileMode: TileMode.repeated,
               ),
               shape: BoxShape.circle,
             ),
@@ -129,25 +124,5 @@ class TapeDisk extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class Hexagon extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, 0);
-    path.lineTo(size.width, 0);
-    path.lineTo(size.width * 0.8, size.height);
-    path.lineTo(size.width * 0.2, size.height);
-    path.lineTo(0, 0);
-
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return true;
   }
 }
