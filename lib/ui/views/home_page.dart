@@ -139,16 +139,19 @@ class _HomepageViewState extends State<HomepageView>
               height: 220,
               speed: 0.2,
               offset: 1,
+              context: context,
             )),
             _onBottom(AnimatedWave(
               height: 240,
               speed: 0.9,
               offset: pi,
+              context: context,
             )),
             _onBottom(AnimatedWave(
               height: 180,
               speed: 0.4,
               offset: pi / 2,
+              context: context,
             )),
             Center(
               child: FlipCardController(

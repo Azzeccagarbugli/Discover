@@ -17,9 +17,10 @@ class CustomTheme {
     data: ThemeData(
       fontFamily: 'Quicksand',
       brightness: Brightness.dark,
-      primaryColor: Colors.blue[800],
-      textSelectionColor: Colors.green[800],
+      primaryColor: Colors.blue[50],
+      textSelectionColor: Colors.blue[800],
       scaffoldBackgroundColor: Colors.white,
+      accentColor: Colors.blue[500],
     ),
   );
 
@@ -30,16 +31,17 @@ class CustomTheme {
       ui: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.black,
+        systemNavigationBarColor: Colors.grey[900],
         systemNavigationBarIconBrightness: Brightness.light,
       ),
     ),
     data: ThemeData(
       fontFamily: 'Quicksand',
       brightness: Brightness.light,
-      textSelectionColor: Colors.white,
-      primaryColor: Colors.amber,
+      textSelectionColor: Colors.amber[800],
+      primaryColor: Colors.black45,
       scaffoldBackgroundColor: Colors.grey[900],
+      accentColor: Colors.amber[400],
     ),
   );
 
@@ -49,6 +51,10 @@ class CustomTheme {
 
   AppTheme getDark() {
     return darkTheme;
+  }
+
+  getStyleUI(SystemUiOverlayStyle ui) {
+    return SystemChrome.setSystemUIOverlayStyle(ui);
   }
 }
 

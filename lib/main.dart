@@ -1,7 +1,6 @@
 import 'package:Discover/themes/theme.dart';
 import 'package:Discover/ui/views/navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:theme_provider/theme_provider.dart';
 

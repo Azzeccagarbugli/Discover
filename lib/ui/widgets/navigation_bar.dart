@@ -1,3 +1,4 @@
+import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -19,24 +20,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             ? Colors.white
             : Colors.grey[900],
         borderRadius: new BorderRadius.circular(62),
-        boxShadow: [
-          BoxShadow(
-            color: ThemeProvider.themeOf(context).id == "light_theme"
-                ? Colors.grey[500]
-                : Colors.black87,
-            offset: Offset(5.0, 5.0),
-            blurRadius: 15.0,
-            spreadRadius: 1.0,
-          ),
-          BoxShadow(
-            color: ThemeProvider.themeOf(context).id == "light_theme"
-                ? Colors.white
-                : Colors.grey[850],
-            offset: Offset(-5.0, -5.0),
-            blurRadius: 15.0,
-            spreadRadius: 1.0,
-          ),
-        ],
+        boxShadow: Neumorphism.boxShadow(context),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(

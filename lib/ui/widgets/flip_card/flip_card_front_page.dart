@@ -1,3 +1,4 @@
+import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/graph.dart';
 import 'package:flutter/material.dart';
 import 'package:spring_button/spring_button.dart';
@@ -42,24 +43,7 @@ class FrontFlipCard extends StatelessWidget {
                   ? Colors.white
                   : Colors.grey[900],
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: ThemeProvider.themeOf(context).id == "light_theme"
-                      ? Colors.grey[500]
-                      : Colors.black87,
-                  offset: Offset(5.0, 5.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0,
-                ),
-                BoxShadow(
-                  color: ThemeProvider.themeOf(context).id == "light_theme"
-                      ? Colors.white
-                      : Colors.grey[850],
-                  offset: Offset(-5.0, -5.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0,
-                ),
-              ],
+              boxShadow: Neumorphism.boxShadow(context),
             ),
             child: MainGraph(
               chartKey: _chartKey,
@@ -78,26 +62,21 @@ class FrontFlipCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: new BoxDecoration(
-                  color: this._isRecording ? Colors.red[600] : Colors.white,
+                  color: this._isRecording
+                      ? Colors.red[600]
+                      : ThemeProvider.themeOf(context)
+                          .data
+                          .scaffoldBackgroundColor,
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[500],
-                      offset: Offset(4.0, 4.0),
-                      blurRadius: 15.0,
-                      spreadRadius: 1.0,
-                    ),
-                    BoxShadow(
-                      color: Colors.white,
-                      offset: Offset(-4.0, -4.0),
-                      blurRadius: 15.0,
-                      spreadRadius: 1.0,
-                    ),
-                  ],
+                  boxShadow: Neumorphism.boxShadow(context),
                 ),
                 child: Icon(
                   this._isRecording ? Icons.mic_off : Icons.mic,
-                  color: this._isRecording ? Colors.white : Colors.blue[800],
+                  color: this._isRecording
+                      ? Colors.white
+                      : (ThemeProvider.themeOf(context).id == "light_theme"
+                          ? Colors.blue[800]
+                          : Colors.white),
                   size: 64,
                 ),
               ),

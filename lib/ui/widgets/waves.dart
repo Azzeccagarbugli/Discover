@@ -2,16 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class AnimatedWave extends StatelessWidget {
   final double height;
   final double speed;
   final double offset;
+  final BuildContext context;
 
   const AnimatedWave({
     this.height,
     this.speed,
     this.offset = 0.0,
+    this.context,
   });
 
   @override
@@ -26,7 +29,7 @@ class AnimatedWave extends StatelessWidget {
           tween: Tween(begin: 0.0, end: 2 * pi),
           builder: (context, value) {
             return CustomPaint(
-              foregroundPainter: CurvePainter(value + offset),
+              foregroundPainter: CurvePainter(value + offset, context),
             );
           },
         ),
@@ -37,14 +40,18 @@ class AnimatedWave extends StatelessWidget {
 
 class CurvePainter extends CustomPainter {
   final double value;
+  final BuildContext context;
 
-  CurvePainter(this.value);
+  CurvePainter(
+    this.value,
+    this.context,
+  );
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..isAntiAlias = true
-      ..color = Colors.blue[400].withAlpha(50)
+      ..color = ThemeProvider.themeOf(context).data.accentColor.withAlpha(50)
       ..strokeWidth = 4;
 
     var stepSize = pi * 0.05;

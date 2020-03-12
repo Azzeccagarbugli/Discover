@@ -1,4 +1,6 @@
+import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flutter/material.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class BackFlipCard extends StatelessWidget {
   const BackFlipCard({
@@ -26,22 +28,11 @@ class BackFlipCard extends StatelessWidget {
             width: 350,
             margin: const EdgeInsets.all(42),
             decoration: new BoxDecoration(
-              color: Colors.white,
+              color: ThemeProvider.themeOf(context).id == "light_theme"
+                  ? Colors.white
+                  : Colors.grey[900],
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[500],
-                  offset: Offset(4.0, 4.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0,
-                ),
-                BoxShadow(
-                  color: Colors.white,
-                  offset: Offset(-4.0, -4.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0,
-                ),
-              ],
+              boxShadow: Neumorphism.boxShadow(context),
             ),
             child: TapeDisk(),
           ),
@@ -64,20 +55,7 @@ class TapeDisk extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(42),
             decoration: new BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[500],
-                  offset: Offset(4.0, 4.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0,
-                ),
-                BoxShadow(
-                  color: Colors.white,
-                  offset: Offset(-4.0, -4.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0,
-                ),
-              ],
+              boxShadow: Neumorphism.boxShadow(context),
               gradient: RadialGradient(
                 radius: 2,
                 stops: [
