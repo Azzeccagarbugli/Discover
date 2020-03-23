@@ -96,7 +96,6 @@ class _HomepageViewState extends State<HomepageView>
         _minNoiseDB = _noiseDB;
         _updateValue = false;
       }
-
       if (_noiseDB > _maxNoiseDB) {
         _maxNoiseDB = _noiseDB;
       }

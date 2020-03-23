@@ -1,8 +1,9 @@
+import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_provider/theme_provider.dart';
 
-class BackFlipCard extends StatelessWidget {
+class BackFlipCard extends StatefulWidget {
   const BackFlipCard({
     Key key,
     @required double value,
@@ -12,14 +13,16 @@ class BackFlipCard extends StatelessWidget {
   final double _value;
 
   @override
-  Widget build(BuildContext context) {
-    List<double> _buildSparkline(double value) {
-      List<double> lst = new List<double>();
-      lst.add(value);
-      print(lst.length.toString());
-      return lst;
-    }
+  _BackFlipCardState createState() => _BackFlipCardState();
+}
 
+class _BackFlipCardState extends State<BackFlipCard> {
+  List<Sound> _lst = new List<Sound>();
+
+  @override
+  Widget build(BuildContext context) {
+    _lst.add(Sound(widget._value));
+    print(_lst.toString());
     return Stack(
       children: <Widget>[
         Center(
@@ -34,73 +37,33 @@ class BackFlipCard extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: Neumorphism.boxShadow(context),
             ),
-            child: TapeDisk(),
+            child: Center(
+              child: ListTile(
+                leading: Icon(
+                  Icons.radio_button_checked,
+                  color: Colors.red,
+                  size: 56,
+                ),
+                title: Text(
+                  "RECORD",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+                subtitle: Text(
+                  "Save the current session of sounds",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ],
-    );
-  }
-}
-
-class TapeDisk extends StatelessWidget {
-  const TapeDisk({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(42),
-            decoration: new BoxDecoration(
-              boxShadow: Neumorphism.boxShadow(context),
-              gradient: RadialGradient(
-                radius: 2,
-                stops: [
-                  0.1,
-                  0.4,
-                  0.6,
-                  0.9,
-                ],
-                colors: [
-                  Colors.grey[900],
-                  Colors.grey[700],
-                  Colors.grey[800],
-                  Colors.grey[600]
-                ],
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: 120,
-                maxWidth: 120,
-              ),
-              child: Container(
-                padding: const EdgeInsets.all(22),
-                decoration: new BoxDecoration(
-                  color: Colors.grey[100],
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[900],
-                      blurRadius: 7.0,
-                      spreadRadius: 2.0,
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.lens,
-                  color: Colors.red[600],
-                  size: 12,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
