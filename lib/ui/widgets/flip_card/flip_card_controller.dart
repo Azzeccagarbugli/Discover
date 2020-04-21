@@ -38,6 +38,7 @@ class FlipCardController extends StatelessWidget {
       flipOnTouch: true,
       back: BackFlipCard(
         value: _noiseDB,
+        isRecording: _isRecording,
       ),
       front: FrontFlipCard(
         chartKey: _chartKey,
