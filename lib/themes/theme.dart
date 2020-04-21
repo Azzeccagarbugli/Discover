@@ -21,6 +21,10 @@ class CustomTheme {
       textSelectionColor: Colors.blue[800],
       scaffoldBackgroundColor: Colors.white,
       accentColor: Colors.blue[500],
+      primaryTextTheme: TextTheme(
+        title: TextStyle(color: Colors.grey[800]),
+        body1: TextStyle(color: Colors.grey[600]),
+      ),
     ),
   );
 
@@ -42,6 +46,10 @@ class CustomTheme {
       primaryColor: Colors.black45,
       scaffoldBackgroundColor: Colors.grey[900],
       accentColor: Colors.amber[400],
+      primaryTextTheme: TextTheme(
+        title: TextStyle(color: Colors.white),
+        body1: TextStyle(color: Colors.grey[200]),
+      ),
     ),
   );
 

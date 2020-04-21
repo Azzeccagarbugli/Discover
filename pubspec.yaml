@@ -17,6 +17,8 @@ dependencies:
   spring_button: ^1.0.13
   flip_card: ^0.4.4
   theme_provider: ^0.3.2
+  avatar_glow: ^1.1.0
+  intl: ^0.16.1
 
 dev_dependencies:
   flutter_test:

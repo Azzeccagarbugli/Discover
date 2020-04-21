@@ -1,4 +1,5 @@
 import 'package:Discover/models/track.dart';
+import 'package:Discover/ui/widgets/effects/glowicon.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flutter/material.dart';
 import 'package:spring_button/spring_button.dart';
@@ -21,17 +22,35 @@ class BackFlipCard extends StatefulWidget {
 }
 
 class _BackFlipCardState extends State<BackFlipCard> {
-  List<Sound> _lst = new List<Sound>();
+  Track _newTrack;
 
   bool _isSaving = false;
 
+  bool _flagTrack = false;
+
+  List<double> _soundValues = new List<double>();
+
+  void creationNewTrack(
+      Track track, List<double> values, String date, bool newTrack) {
+    if (newTrack) {
+      _soundValues.add(widget._value);
+      track = new Track(sound: values, date: date);
+    } else {
+      print("\nHEYYYYYYYYYYYYYYYYYY\n");
+      track.reset();
+    }
+
+    print(track);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // _lst.add(Sound(widget._value));
-    // print(_lst.toString());
-
     if (!widget._isRecording) {
       _isSaving = false;
+    }
+
+    if (widget._isRecording && _isSaving) {
+      creationNewTrack(_newTrack, _soundValues, "HEY BELLO", _isSaving);
     }
 
     return Stack(
@@ -50,9 +69,6 @@ class _BackFlipCardState extends State<BackFlipCard> {
             ),
             child: Center(
               child: ListTile(
-                onTap: () {
-                  print("object");
-                },
                 leading: SpringButton(
                   SpringButtonType.OnlyScale,
                   Container(
@@ -61,14 +77,20 @@ class _BackFlipCardState extends State<BackFlipCard> {
                           .data
                           .scaffoldBackgroundColor,
                       shape: BoxShape.circle,
-                      boxShadow: Neumorphism.boxShadow(context),
+                      boxShadow: this.widget._isRecording
+                          ? Neumorphism.boxShadow(context)
+                          : [
+                              BoxShadow(
+                                color: Colors.transparent,
+                              )
+                            ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
                       child: Icon(
-                        Icons.graphic_eq,
+                        Icons.blur_on,
                         color: this.widget._isRecording
-                            ? (_isSaving ? Colors.green[400] : Colors.orange)
+                            ? (_isSaving ? Colors.red[600] : Colors.green[400])
                             : Colors.grey[400],
                         size: 42,
                       ),
@@ -83,25 +105,35 @@ class _BackFlipCardState extends State<BackFlipCard> {
                 ),
                 title: Text(
                   "RECORD",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
+                  style: ThemeProvider.themeOf(context)
+                      .data
+                      .primaryTextTheme
+                      .title
+                      .copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
                 ),
                 subtitle: Text(
-                  "Tap to save the current session of sounds",
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                  !_isSaving
+                      ? "Tap to save the current session of sounds"
+                      : "Tap to stop saving the current sounds",
+                  style: ThemeProvider.themeOf(context)
+                      .data
+                      .primaryTextTheme
+                      .body1,
                   maxLines: 2,
                   overflow: TextOverflow.fade,
                 ),
-                trailing: Icon(
-                  Icons.brightness_1,
-                  color: Colors.grey[400],
-                  size: 12,
-                ),
+                trailing: this.widget._isRecording
+                    ? (this._isSaving
+                        ? GlowIconRecording(color: Colors.red[600])
+                        : GlowIconRecording(color: Colors.green[400]))
+                    : Icon(
+                        Icons.brightness_1,
+                        color: Colors.grey[400],
+                        size: 12,
+                      ),
               ),
             ),
           ),
