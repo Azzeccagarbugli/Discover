@@ -22,25 +22,16 @@ class BackFlipCard extends StatefulWidget {
 }
 
 class _BackFlipCardState extends State<BackFlipCard> {
-  Track _newTrack;
-
   bool _isSaving = false;
 
-  bool _flagTrack = false;
+  Track _trk;
 
-  List<double> _soundValues = new List<double>();
+  Set<Track> _setTracks = new Set<Track>();
 
-  void creationNewTrack(
-      Track track, List<double> values, String date, bool newTrack) {
-    if (newTrack) {
-      _soundValues.add(widget._value);
-      track = new Track(sound: values, date: date);
-    } else {
-      print("\nHEYYYYYYYYYYYYYYYYYY\n");
-      track.reset();
-    }
-
-    print(track);
+  List<double> creationNewTrack(double val) {
+    List<double> list = new List<double>();
+    list.add(val);
+    return list;
   }
 
   @override
@@ -49,9 +40,15 @@ class _BackFlipCardState extends State<BackFlipCard> {
       _isSaving = false;
     }
 
-    if (widget._isRecording && _isSaving) {
-      creationNewTrack(_newTrack, _soundValues, "HEY BELLO", _isSaving);
+    if (_isSaving) {
+      _trk = new Track(sound: creationNewTrack(widget._value), date: "HEY");
     }
+
+    _setTracks.add(_trk);
+
+    print(_setTracks.length);
+
+    print(_setTracks);
 
     return Stack(
       children: <Widget>[

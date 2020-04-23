@@ -17,10 +17,15 @@ class Track {
     return _date;
   }
 
+  void addValues(double val) {
+    this._sound.add(val);
+  }
+
   void reset() {
     if (this._sound.isNotEmpty) {
       this._sound.clear();
     }
+    this._date = "";
   }
 
   @override
