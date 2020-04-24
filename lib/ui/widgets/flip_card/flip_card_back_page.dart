@@ -1,6 +1,7 @@
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/effects/glowicon.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -26,12 +27,12 @@ class _BackFlipCardState extends State<BackFlipCard> {
 
   Track _trk;
 
+  List<double> _values = new List<double>();
+
   Set<Track> _setTracks = new Set<Track>();
 
-  List<double> creationNewTrack(double val) {
-    List<double> list = new List<double>();
+  void creationNewTrack(List<double> list, double val) {
     list.add(val);
-    return list;
   }
 
   @override
@@ -41,10 +42,8 @@ class _BackFlipCardState extends State<BackFlipCard> {
     }
 
     if (_isSaving) {
-      _trk = new Track(sound: creationNewTrack(widget._value), date: "HEY");
+      creationNewTrack(_values, widget._value);
     }
-
-    _setTracks.add(_trk);
 
     print(_setTracks.length);
 
@@ -84,18 +83,37 @@ class _BackFlipCardState extends State<BackFlipCard> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
-                      child: Icon(
-                        Icons.blur_on,
-                        color: this.widget._isRecording
-                            ? (_isSaving ? Colors.red[600] : Colors.green[400])
-                            : Colors.grey[400],
-                        size: 42,
+                      // child: Icon(
+                      //   Icons.blur_on,
+                      // color: this.widget._isRecording
+                      //     ? (_isSaving ? Colors.red[600] : Colors.green[400])
+                      //     : Colors.grey[400],
+                      //   size: 42,
+                      // ),
+                      child: Container(
+                        height: 42,
+                        width: 42,
+                        child: FlareActor(
+                          "assets/flares/recording.flr",
+                          fit: BoxFit.scaleDown,
+                          color: this.widget._isRecording
+                              ? (_isSaving
+                                  ? Colors.red[600]
+                                  : Colors.green[400])
+                              : Colors.grey[400],
+                          animation: "record",
+                        ),
                       ),
                     ),
                   ),
                   onTap: () {
                     setState(() {
                       _isSaving = !_isSaving;
+
+                      if (_isSaving) {
+                        _trk = new Track(sound: _values, date: "HEY");
+                        _setTracks.add(_trk);
+                      }
                     });
                   },
                   useCache: false,
