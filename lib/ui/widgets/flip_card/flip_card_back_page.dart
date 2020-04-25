@@ -65,6 +65,7 @@ class _BackFlipCardState extends State<BackFlipCard> {
             ),
             child: Center(
               child: ListTile(
+                isThreeLine: true,
                 leading: SpringButton(
                   SpringButtonType.OnlyScale,
                   Container(
@@ -93,16 +94,22 @@ class _BackFlipCardState extends State<BackFlipCard> {
                       child: Container(
                         height: 42,
                         width: 42,
-                        child: FlareActor(
-                          "assets/flares/recording.flr",
-                          fit: BoxFit.scaleDown,
-                          color: this.widget._isRecording
-                              ? (_isSaving
-                                  ? Colors.red[600]
-                                  : Colors.green[400])
-                              : Colors.grey[400],
-                          animation: "record",
-                        ),
+                        child: !this.widget._isRecording
+                            ? Icon(
+                                Icons.mic_none,
+                                color: Colors.grey[400],
+                                size: 42,
+                              )
+                            : FlareActor(
+                                "assets/flares/recording.flr",
+                                fit: BoxFit.scaleDown,
+                                color: this.widget._isRecording
+                                    ? (_isSaving
+                                        ? Colors.red[600]
+                                        : Colors.green[400])
+                                    : Colors.grey[400],
+                                animation: "record",
+                              ),
                       ),
                     ),
                   ),
@@ -130,14 +137,16 @@ class _BackFlipCardState extends State<BackFlipCard> {
                       ),
                 ),
                 subtitle: Text(
-                  !_isSaving
-                      ? "Tap to save the current session of sounds"
-                      : "Tap to stop saving the current sounds",
+                  widget._isRecording
+                      ? (!_isSaving
+                          ? "Tap to save the current session of sounds"
+                          : "Tap to stop saving the current session of sounds")
+                      : "Start to feel the sound around you, tap the mic on the other side",
                   style: ThemeProvider.themeOf(context)
                       .data
                       .primaryTextTheme
                       .body1,
-                  maxLines: 2,
+                  maxLines: 3,
                   overflow: TextOverflow.fade,
                 ),
                 trailing: this.widget._isRecording
