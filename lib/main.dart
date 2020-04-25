@@ -17,6 +17,7 @@ class Discover extends StatelessWidget {
         _customTheme.getDark(),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: ThemeConsumer(
           child: NavigationView(),
         ),

@@ -15,7 +15,7 @@ class Neumorphism {
       BoxShadow(
         color: ThemeProvider.themeOf(context).id == "light_theme"
             ? Colors.white
-            : Colors.grey[850],
+            : Colors.grey[900],
         offset: Offset(-4.0, -4.0),
         blurRadius: 15.0,
         spreadRadius: 1.0,

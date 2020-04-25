@@ -3,6 +3,7 @@ import 'package:Discover/ui/widgets/effects/glowicon.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -31,7 +32,9 @@ class _BackFlipCardState extends State<BackFlipCard> {
 
   Set<Track> _setTracks = new Set<Track>();
 
-  void creationNewTrack(List<double> list, double val) {
+  DateTime _now = DateTime.now();
+
+  void _createSoundList(List<double> list, double val) {
     list.add(val);
   }
 
@@ -42,10 +45,8 @@ class _BackFlipCardState extends State<BackFlipCard> {
     }
 
     if (_isSaving) {
-      creationNewTrack(_values, widget._value);
+      _createSoundList(_values, widget._value);
     }
-
-    print(_setTracks.length);
 
     print(_setTracks);
 
@@ -74,6 +75,12 @@ class _BackFlipCardState extends State<BackFlipCard> {
                           .data
                           .scaffoldBackgroundColor,
                       shape: BoxShape.circle,
+                      border: !this.widget._isRecording
+                          ? Border.all(
+                              color: Colors.grey[400],
+                              width: 3,
+                            )
+                          : null,
                       boxShadow: this.widget._isRecording
                           ? Neumorphism.boxShadow(context)
                           : [
@@ -83,31 +90,25 @@ class _BackFlipCardState extends State<BackFlipCard> {
                             ],
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
-                      // child: Icon(
-                      //   Icons.blur_on,
-                      // color: this.widget._isRecording
-                      //     ? (_isSaving ? Colors.red[600] : Colors.green[400])
-                      //     : Colors.grey[400],
-                      //   size: 42,
-                      // ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                       child: Container(
                         height: 42,
                         width: 42,
                         child: !this.widget._isRecording
-                            ? Icon(
-                                Icons.mic_none,
+                            ? FlareActor(
+                                "assets/flares/recording.flr",
+                                fit: BoxFit.scaleDown,
                                 color: Colors.grey[400],
-                                size: 42,
                               )
                             : FlareActor(
                                 "assets/flares/recording.flr",
                                 fit: BoxFit.scaleDown,
-                                color: this.widget._isRecording
-                                    ? (_isSaving
-                                        ? Colors.red[600]
-                                        : Colors.green[400])
-                                    : Colors.grey[400],
+                                color: _isSaving
+                                    ? Colors.red[600]
+                                    : Colors.green[400],
                                 animation: "record",
                               ),
                       ),
@@ -118,7 +119,10 @@ class _BackFlipCardState extends State<BackFlipCard> {
                       _isSaving = !_isSaving;
 
                       if (_isSaving) {
-                        _trk = new Track(sound: _values, date: "HEY");
+                        _trk = new Track(
+                          sound: _values,
+                          date: DateFormat('kk:mm dd-MM-yyyy').format(_now),
+                        );
                         _setTracks.add(_trk);
                       }
                     });
@@ -139,7 +143,7 @@ class _BackFlipCardState extends State<BackFlipCard> {
                 subtitle: Text(
                   widget._isRecording
                       ? (!_isSaving
-                          ? "Tap to save the current session of sounds"
+                          ? "Tap to save and store the current session of sounds"
                           : "Tap to stop saving the current session of sounds")
                       : "Start to feel the sound around you, tap the mic on the other side",
                   style: ThemeProvider.themeOf(context)
