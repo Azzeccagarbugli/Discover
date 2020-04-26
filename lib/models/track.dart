@@ -17,20 +17,17 @@ class Track {
     return _date;
   }
 
-  void addValues(double val) {
-    this._sound.add(val);
-  }
+  Track.fromJson(Map<String, dynamic> json)
+      : _sound = json['sound'],
+        _date = json['date'];
 
-  void reset() {
-    if (this._sound.isNotEmpty) {
-      this._sound.clear();
-    }
-    this._date = "";
-  }
+  Map<String, dynamic> toJson() => {
+        'sound': _sound,
+        'date': _date,
+      };
 
   @override
   String toString() {
-    // TODO: implement toString
     return "Valori " + getSound().toString() + " - Data: " + getDate();
   }
 }

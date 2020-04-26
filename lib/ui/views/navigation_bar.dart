@@ -1,7 +1,7 @@
 import 'package:Discover/themes/theme.dart';
 import 'package:Discover/ui/views/home_page.dart';
 import 'package:Discover/ui/views/tracks_page.dart';
-import 'package:Discover/ui/widgets/navigation_bar.dart';
+import 'package:Discover/ui/widgets/custom_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_provider/theme_provider.dart';
 

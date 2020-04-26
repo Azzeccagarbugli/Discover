@@ -1,3 +1,4 @@
+import 'package:Discover/controllers/sharedpref.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/effects/glowicon.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
@@ -30,9 +31,9 @@ class _BackFlipCardState extends State<BackFlipCard> {
 
   List<double> _values = new List<double>();
 
-  Set<Track> _setTracks = new Set<Track>();
-
   DateTime _now = DateTime.now();
+
+  SharedPref _sharedPref = SharedPref();
 
   void _createSoundList(List<double> list, double val) {
     list.add(val);
@@ -47,8 +48,6 @@ class _BackFlipCardState extends State<BackFlipCard> {
     if (_isSaving) {
       _createSoundList(_values, widget._value);
     }
-
-    print(_setTracks);
 
     return Stack(
       children: <Widget>[
@@ -120,10 +119,14 @@ class _BackFlipCardState extends State<BackFlipCard> {
 
                       if (_isSaving) {
                         _trk = new Track(
-                          sound: _values,
                           date: DateFormat('kk:mm dd-MM-yyyy').format(_now),
+                          sound: _values,
                         );
-                        _setTracks.add(_trk);
+
+                        _sharedPref.save(
+                          "track",
+                          _trk,
+                        );
                       }
                     });
                   },
