@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Track {
-  List<double> _sound;
+  List _sound;
   String _date;
 
-  Track({@required List<double> sound, @required String date}) {
+  Track({@required List sound, @required String date}) {
     this._sound = sound;
     this._date = date;
   }
 
-  List<double> getSound() {
+  List getSound() {
     return _sound;
   }
 

@@ -125,7 +125,7 @@ class _BackFlipCardState extends State<BackFlipCard> {
 
                         _sharedPref.save(
                           "track",
-                          _trk,
+                          _trk.toJson(),
                         );
                       }
                     });
