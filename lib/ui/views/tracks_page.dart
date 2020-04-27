@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:Discover/controllers/sharedpref.dart';
 import 'package:Discover/models/track.dart';
 import 'package:flutter/material.dart';
@@ -10,23 +12,32 @@ class TracksView extends StatefulWidget {
 class _TracksViewState extends State<TracksView> {
   SharedPref _sharedPref = SharedPref();
 
-  Track _trk = Track(sound: [], date: "");
+  List<Track> _listTracks = new List<Track>();
+
+  List<Track> tracksFromStringList(List<String> list) {
+    List<Track> tracks = new List<Track>();
+
+    for (String item in list) {
+      // print("UN OGGETTO BELLO " + Track.fromJson(json.decode(item)).toString());
+      tracks.add(Track.fromJson(json.decode(item)));
+    }
+
+    return tracks;
+  }
 
   _loadSharedPrefs() async {
     try {
-      Track trk = Track.fromJson(await _sharedPref.read("track"));
-      print("HEY" + trk.toString());
-      Scaffold.of(context).showSnackBar(SnackBar(
-          content: new Text("Loaded!"),
-          duration: const Duration(milliseconds: 500)));
+      // Track trk = Track.fromJson(await _sharedPref.read("track"));
+      print("CIAO");
+
+      List<Track> listTracks =
+          tracksFromStringList(await _sharedPref.read("track"));
+
       setState(() {
-        _trk = trk;
+        _listTracks = listTracks;
       });
     } catch (Excepetion) {
       print(Excepetion);
-      Scaffold.of(context).showSnackBar(SnackBar(
-          content: new Text("Nothing found!"),
-          duration: const Duration(milliseconds: 500)));
     }
   }
 
@@ -43,7 +54,7 @@ class _TracksViewState extends State<TracksView> {
         color: Colors.white,
         child: Center(
           child: Text(
-            _trk.toString(),
+            _listTracks.toString(),
             style: TextStyle(color: Colors.grey[900]),
           ),
         ),

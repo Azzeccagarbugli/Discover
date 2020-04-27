@@ -18,16 +18,16 @@ class Track {
   }
 
   Track.fromJson(Map<String, dynamic> json)
-      : _sound = json['sound'],
+      : _sound = json['sound'].split(',').toList(),
         _date = json['date'];
 
   Map<String, dynamic> toJson() => {
-        'sound': _sound,
+        'sound': _sound.toString(),
         'date': _date,
       };
 
   @override
   String toString() {
-    return "Valori " + getSound().toString() + " - Data: " + getDate();
+    return "Valori: " + getSound().toString() + " - Data: " + getDate();
   }
 }

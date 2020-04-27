@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:Discover/controllers/sharedpref.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/effects/glowicon.dart';
@@ -35,8 +37,14 @@ class _BackFlipCardState extends State<BackFlipCard> {
 
   SharedPref _sharedPref = SharedPref();
 
+  List<String> _tracks = new List<String>();
+
   void _createSoundList(List<double> list, double val) {
     list.add(val);
+  }
+
+  void encondeToJson(List<String> list, Track trk) {
+    list.add(json.encode(trk.toJson()));
   }
 
   @override
@@ -123,10 +131,9 @@ class _BackFlipCardState extends State<BackFlipCard> {
                           sound: _values,
                         );
 
-                        _sharedPref.save(
-                          "track",
-                          _trk.toJson(),
-                        );
+                        encondeToJson(_tracks, _trk);
+
+                        _sharedPref.save("track", _tracks);
                       }
                     });
                   },
