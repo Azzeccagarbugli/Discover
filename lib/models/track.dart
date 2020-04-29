@@ -1,33 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
+part 'track.g.dart';
+
+@HiveType(typeId: 0)
 class Track {
-  List _sound;
-  String _date;
+  @HiveField(0)
+  final List sound;
 
-  Track({@required List sound, @required String date}) {
-    this._sound = sound;
-    this._date = date;
-  }
+  @HiveField(1)
+  final String date;
 
-  List getSound() {
-    return _sound;
-  }
+  @HiveField(2)
+  final bool isSaved;
 
-  String getDate() {
-    return _date;
-  }
-
-  Track.fromJson(Map<String, dynamic> json)
-      : _sound = json['sound'].split(',').toList(),
-        _date = json['date'];
-
-  Map<String, dynamic> toJson() => {
-        'sound': _sound.toString(),
-        'date': _date,
-      };
-
-  @override
-  String toString() {
-    return "Valori: " + getSound().toString() + " - Data: " + getDate();
-  }
+  Track({
+    @required this.sound,
+    @required this.date,
+    @required this.isSaved,
+  });
 }

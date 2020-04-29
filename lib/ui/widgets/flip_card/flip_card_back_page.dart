@@ -1,11 +1,10 @@
-import 'dart:convert';
-
-import 'package:Discover/controllers/sharedpref.dart';
+import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/effects/glowicon.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -35,16 +34,16 @@ class _BackFlipCardState extends State<BackFlipCard> {
 
   DateTime _now = DateTime.now();
 
-  SharedPref _sharedPref = SharedPref();
-
-  List<String> _tracks = new List<String>();
+  Box<Track> _trackBox;
 
   void _createSoundList(List<double> list, double val) {
     list.add(val);
   }
 
-  void encondeToJson(List<String> list, Track trk) {
-    list.add(json.encode(trk.toJson()));
+  @override
+  void initState() {
+    super.initState();
+    _trackBox = Hive.box<Track>(Discover.trackBoxName);
   }
 
   @override
@@ -129,11 +128,9 @@ class _BackFlipCardState extends State<BackFlipCard> {
                         _trk = new Track(
                           date: DateFormat('kk:mm dd-MM-yyyy').format(_now),
                           sound: _values,
+                          isSaved: false,
                         );
-
-                        encondeToJson(_tracks, _trk);
-
-                        _sharedPref.save("track", _tracks);
+                        _trackBox.add(_trk);
                       }
                     });
                   },

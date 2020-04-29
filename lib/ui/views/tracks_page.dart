@@ -1,8 +1,8 @@
-import 'dart:convert';
-
-import 'package:Discover/controllers/sharedpref.dart';
+import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class TracksView extends StatefulWidget {
   @override
@@ -10,53 +10,40 @@ class TracksView extends StatefulWidget {
 }
 
 class _TracksViewState extends State<TracksView> {
-  SharedPref _sharedPref = SharedPref();
-
-  List<Track> _listTracks = new List<Track>();
-
-  List<Track> tracksFromStringList(List<String> list) {
-    List<Track> tracks = new List<Track>();
-
-    for (String item in list) {
-      // print("UN OGGETTO BELLO " + Track.fromJson(json.decode(item)).toString());
-      tracks.add(Track.fromJson(json.decode(item)));
-    }
-
-    return tracks;
-  }
-
-  _loadSharedPrefs() async {
-    try {
-      // Track trk = Track.fromJson(await _sharedPref.read("track"));
-      print("CIAO");
-
-      List<Track> listTracks =
-          tracksFromStringList(await _sharedPref.read("track"));
-
-      setState(() {
-        _listTracks = listTracks;
-      });
-    } catch (Excepetion) {
-      print(Excepetion);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSharedPrefs();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Colors.white,
-        child: Center(
-          child: Text(
-            _listTracks.toString(),
-            style: TextStyle(color: Colors.grey[900]),
-          ),
+        child: ValueListenableBuilder(
+          valueListenable: Hive.box<Track>(Discover.trackBoxName).listenable(),
+          builder: (context, Box<Track> tracks, _) {
+            print("CIAO");
+
+            return ListView.separated(
+              itemBuilder: (_, index) {
+                final int key = tracks.keys.cast<int>().toList()[index];
+
+                final Track trk = tracks.get(key);
+
+                return Card(
+                  color: Colors.indigo,
+                  child: ListTile(
+                    title: Text(trk.date),
+                    subtitle: Text(trk.sound.toString()),
+                    trailing: Icon(
+                      trk.isSaved ? Icons.favorite : Icons.favorite_border,
+                      color: trk.isSaved ? Colors.red : Colors.grey,
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (_, index) {
+                return Divider();
+              },
+              itemCount: tracks.keys.cast<int>().toList().length,
+            );
+          },
         ),
       ),
     );
