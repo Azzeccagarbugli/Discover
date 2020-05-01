@@ -81,12 +81,6 @@ class _BackFlipCardState extends State<BackFlipCard> {
                           .data
                           .scaffoldBackgroundColor,
                       shape: BoxShape.circle,
-                      border: !this.widget._isRecording
-                          ? Border.all(
-                              color: Colors.grey[400],
-                              width: 3,
-                            )
-                          : null,
                       boxShadow: this.widget._isRecording
                           ? Neumorphism.boxShadow(context)
                           : [
@@ -124,7 +118,7 @@ class _BackFlipCardState extends State<BackFlipCard> {
                     setState(() {
                       _isSaving = !_isSaving;
 
-                      if (_isSaving) {
+                      if (_isSaving && widget._isRecording) {
                         _trk = new Track(
                           date: DateFormat('kk:mm dd-MM-yyyy').format(_now),
                           sound: _values,

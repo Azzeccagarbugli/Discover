@@ -1,5 +1,8 @@
 import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
+import 'package:Discover/ui/widgets/effects/neumorphism.dart';
+import 'package:Discover/ui/widgets/lateral_action.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive/hive.dart';
@@ -28,7 +31,8 @@ class _TracksViewState extends State<TracksView> {
             separatorBuilder: (_, index) => Divider(),
             itemCount: tracks.keys.cast<int>().toList().length,
             itemBuilder: (_, index) {
-              final int key = tracks.keys.cast<int>().toList()[index];
+              final int key =
+                  tracks.keys.cast<int>().toList().reversed.toList()[index];
 
               final Track trk = tracks.get(key);
 
@@ -44,72 +48,83 @@ class _TracksViewState extends State<TracksView> {
                   },
                 ),
                 actions: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(4),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12.0),
-                      ),
-                      child: IconSlideAction(
-                        closeOnTap: true,
-                        caption: 'Delete',
-                        icon: Icons.delete,
-                        color: Colors.red,
-                        onTap: () => {},
-                      ),
-                    ),
+                  LateralAction(
+                    closeOnTap: true,
+                    caption: "Delete",
+                    icon: Icons.delete,
+                    pos: key,
+                    onTap: () {},
+                    color: Colors.red,
                   ),
                 ],
                 secondaryActions: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(4),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12.0),
-                      ),
-                      child: IconSlideAction(
-                        caption: trk.isSaved ? 'Unsave' : 'Save',
-                        icon: trk.isSaved
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: Colors.green,
-                        onTap: () {
-                          Track nTrack = new Track(
-                            sound: trk.sound,
-                            date: trk.date,
-                            isSaved: true,
-                          );
+                  LateralAction(
+                    closeOnTap: false,
+                    trk: trk,
+                    pos: key,
+                    onTap: () {
+                      Track nTrack = new Track(
+                        sound: trk.sound,
+                        date: trk.date,
+                        isSaved: !trk.isSaved,
+                      );
 
-                          tracks.put(key, nTrack);
-                        },
-                      ),
-                    ),
+                      tracks.put(key, nTrack);
+                    },
+                    color: Colors.green,
+                    tracks: tracks,
                   ),
-                  Container(
-                    margin: EdgeInsets.all(4),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12.0),
-                      ),
-                      child: IconSlideAction(
-                        caption: 'Share',
-                        icon: Icons.share,
-                        color: Colors.indigoAccent,
-                        onTap: () => {},
-                      ),
-                    ),
+                  LateralAction(
+                    closeOnTap: true,
+                    caption: "Share",
+                    icon: Icons.share,
+                    pos: key,
+                    onTap: () {},
+                    color: Colors.indigoAccent,
                   ),
                 ],
-                child: Card(
-                  shape: RoundedRectangleBorder(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 12),
+                  decoration: new BoxDecoration(
+                    color: ThemeProvider.themeOf(context)
+                        .data
+                        .scaffoldBackgroundColor,
+                    boxShadow: Neumorphism.boxShadow(context),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(12.0),
                     ),
                   ),
-                  color: Colors.indigo,
                   child: ListTile(
-                    title: Text(trk.date),
-                    subtitle: Text(trk.sound.toString()),
+                    title: Text(
+                      trk.date,
+                      style: TextStyle(
+                        color: Colors.grey[900],
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text(
+                      "BELLA",
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    leading: Container(
+                      height: 42,
+                      width: 42,
+                      padding: const EdgeInsets.all(6),
+                      decoration: new BoxDecoration(
+                        color: ThemeProvider.themeOf(context)
+                            .data
+                            .scaffoldBackgroundColor,
+                        boxShadow: Neumorphism.boxShadow(context),
+                        shape: BoxShape.circle,
+                      ),
+                      child: FlareActor(
+                        "assets/flares/recording.flr",
+                        fit: BoxFit.contain,
+                        color: Colors.green[400],
+                      ),
+                    ),
                   ),
                 ),
               );
