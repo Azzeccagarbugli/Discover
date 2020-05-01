@@ -9,7 +9,7 @@ class Track {
   final List sound;
 
   @HiveField(1)
-  final String date;
+  final DateTime date;
 
   @HiveField(2)
   final bool isSaved;

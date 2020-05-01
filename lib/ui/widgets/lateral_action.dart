@@ -7,7 +7,7 @@ class LateralAction extends StatelessWidget {
   final Track trk;
   final int pos;
   final Box<Track> tracks;
-  final String caption;
+
   final Color color;
   final Function onTap;
   final IconData icon;
@@ -17,7 +17,6 @@ class LateralAction extends StatelessWidget {
     this.trk,
     @required this.pos,
     this.tracks,
-    this.caption,
     @required this.color,
     @required this.onTap,
     this.icon,
@@ -34,7 +33,6 @@ class LateralAction extends StatelessWidget {
         ),
         child: IconSlideAction(
           closeOnTap: closeOnTap,
-          caption: trk != null ? (trk.isSaved ? 'Unsave' : 'Save') : caption,
           icon: trk != null
               ? (trk.isSaved ? Icons.favorite : Icons.favorite_border)
               : icon,

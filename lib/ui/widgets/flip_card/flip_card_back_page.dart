@@ -5,7 +5,6 @@ import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -31,8 +30,6 @@ class _BackFlipCardState extends State<BackFlipCard> {
   Track _trk;
 
   List<double> _values = new List<double>();
-
-  DateTime _now = DateTime.now();
 
   Box<Track> _trackBox;
 
@@ -120,7 +117,7 @@ class _BackFlipCardState extends State<BackFlipCard> {
 
                       if (_isSaving && widget._isRecording) {
                         _trk = new Track(
-                          date: DateFormat('kk:mm dd-MM-yyyy').format(_now),
+                          date: DateTime.now(),
                           sound: _values,
                           isSaved: false,
                         );

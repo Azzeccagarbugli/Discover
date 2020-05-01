@@ -5,8 +5,11 @@ import 'package:Discover/ui/widgets/lateral_action.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class TracksView extends StatefulWidget {
@@ -50,7 +53,6 @@ class _TracksViewState extends State<TracksView> {
                 actions: <Widget>[
                   LateralAction(
                     closeOnTap: true,
-                    caption: "Delete",
                     icon: Icons.delete,
                     pos: key,
                     onTap: () {},
@@ -76,7 +78,6 @@ class _TracksViewState extends State<TracksView> {
                   ),
                   LateralAction(
                     closeOnTap: true,
-                    caption: "Share",
                     icon: Icons.share,
                     pos: key,
                     onTap: () {},
@@ -96,7 +97,7 @@ class _TracksViewState extends State<TracksView> {
                   ),
                   child: ListTile(
                     title: Text(
-                      trk.date,
+                      DateFormat('yyyy-MM-dd – kk:mm').format(trk.date),
                       style: TextStyle(
                         color: Colors.grey[900],
                         fontWeight: FontWeight.w600,
@@ -119,10 +120,12 @@ class _TracksViewState extends State<TracksView> {
                         boxShadow: Neumorphism.boxShadow(context),
                         shape: BoxShape.circle,
                       ),
-                      child: FlareActor(
-                        "assets/flares/recording.flr",
-                        fit: BoxFit.contain,
-                        color: Colors.green[400],
+                      child: Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.play,
+                          color: Colors.green,
+                          size: 16,
+                        ),
                       ),
                     ),
                   ),

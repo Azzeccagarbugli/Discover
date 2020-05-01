@@ -18,7 +18,7 @@ class TrackAdapter extends TypeAdapter<Track> {
     };
     return Track(
       sound: (fields[0] as List)?.cast<dynamic>(),
-      date: fields[1] as String,
+      date: fields[1] as DateTime,
       isSaved: fields[2] as bool,
     );
   }

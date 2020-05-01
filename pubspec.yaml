@@ -25,6 +25,7 @@ dependencies:
   flare_flutter: ^2.0.3
   flutter_slidable: ^0.5.4
   flutter_svg: ^0.17.4
+  font_awesome_flutter: ^8.8.1
 
 dev_dependencies:
   flutter_test:
@@ -36,7 +37,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/flares/recording.flr
-    - assets/images/icon/play.svg
   fonts:
     - family: Quicksand
       fonts:
