@@ -2,10 +2,8 @@ import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/lateral_action.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -46,6 +44,9 @@ class _TracksViewState extends State<TracksView> {
                 showAllActionsThreshold: 0.5,
                 dismissal: SlidableDismissal(
                   child: SlidableDrawerDismissal(),
+                  dismissThresholds: <SlideActionType, double>{
+                    SlideActionType.secondary: 1.0
+                  },
                   onDismissed: (actionType) {
                     tracks.delete(key);
                   },
@@ -96,15 +97,23 @@ class _TracksViewState extends State<TracksView> {
                     ),
                   ),
                   child: ListTile(
+                    trailing: Icon(
+                      Icons.graphic_eq,
+                      color: (trk.sound.cast<double>().reduce((a, b) => a + b) /
+                                  trk.sound.length) <
+                              50
+                          ? Colors.grey[400]
+                          : Colors.orange[300],
+                    ),
                     title: Text(
-                      DateFormat('yyyy-MM-dd – kk:mm').format(trk.date),
+                      DateFormat('EEEE, MMM d, ' 'yyyy').format(trk.date),
                       style: TextStyle(
                         color: Colors.grey[900],
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     subtitle: Text(
-                      "BELLA",
+                      'Recorded at ' + DateFormat('hh:mm a').format(trk.date),
                       style: TextStyle(
                         color: Colors.grey[700],
                       ),
