@@ -1,5 +1,6 @@
 import 'package:Discover/themes/theme.dart';
 import 'package:Discover/ui/views/home_page.dart';
+import 'package:Discover/ui/views/saved_tracks_page.dart';
 import 'package:Discover/ui/views/tracks_page.dart';
 import 'package:Discover/ui/widgets/custom_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,10 @@ class _NavigationViewState extends State<NavigationView> {
     return TracksView();
   }
 
+  Widget _savedTracksView() {
+    return SavedTracksView();
+  }
+
   void _setScaffoldBody(index) {
     switch (index) {
       case 0:
@@ -39,6 +44,11 @@ class _NavigationViewState extends State<NavigationView> {
       case 1:
         setState(() {
           this._bodyWidget = _tracksView();
+        });
+        break;
+      case 2:
+        setState(() {
+          this._bodyWidget = _savedTracksView();
         });
         break;
     }

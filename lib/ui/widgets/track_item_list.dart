@@ -14,6 +14,50 @@ class TrackItemList extends StatelessWidget {
 
   final Track trk;
 
+  static int diffInDays(DateTime date1, DateTime date2) {
+    return ((date1.difference(date2) -
+                    Duration(hours: date1.hour) +
+                    Duration(hours: date2.hour))
+                .inHours /
+            24)
+        .round();
+  }
+
+  static Widget buildIcon(Track trk) {
+    switch (diffInDays(DateTime.now(), trk.date)) {
+      case 0:
+        return Chip(
+          backgroundColor: Colors.green[600],
+          label: Text(
+            'TODAY',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        );
+      case 1:
+        return Chip(
+          backgroundColor: Colors.amber[800],
+          label: Text(
+            'A DAY AGO',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        );
+      default:
+        return Icon(
+          Icons.graphic_eq,
+          color: Colors.grey[400],
+          size: 16,
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,13 +70,11 @@ class TrackItemList extends StatelessWidget {
         ),
       ),
       child: ListTile(
-        trailing: Icon(
-          Icons.graphic_eq,
-          color: Colors.grey[400],
-          size: 16,
-        ),
+        trailing: buildIcon(trk),
         title: Text(
-          DateFormat('EEEE, MMM d, ' 'yyyy').format(trk.date),
+          DateFormat('EEEE, MMM d').format(trk.date),
+          maxLines: 1,
+          overflow: TextOverflow.fade,
           style: ThemeProvider.themeOf(context)
               .data
               .primaryTextTheme
@@ -57,7 +99,7 @@ class TrackItemList extends StatelessWidget {
           child: Center(
             child: FaIcon(
               FontAwesomeIcons.play,
-              color: Colors.green,
+              color: ThemeProvider.themeOf(context).data.accentColor,
               size: 16,
             ),
           ),

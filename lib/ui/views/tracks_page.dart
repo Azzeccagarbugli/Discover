@@ -31,7 +31,9 @@ class _TracksViewState extends State<TracksView> {
           builder: (context, Box<Track> tracks, _) {
             if (tracks.isEmpty) {
               return NotFound(
-                pathImg: "assets/images/tracks.png",
+                pathImg: ThemeProvider.themeOf(context).id == "light_theme"
+                    ? "assets/images/tracks_light.png"
+                    : "assets/images/tracks_dark.png",
                 title: "Any track found!",
                 subtitile:
                     "If you would like to add a new track just go to the homepage and start to record a new session of sounds",

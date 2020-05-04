@@ -36,7 +36,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/flares/recording.flr
-    - assets/images/tracks.png
+    - assets/images/tracks_light.png
+    - assets/images/tracks_dark.png
   fonts:
     - family: Quicksand
       fonts:
