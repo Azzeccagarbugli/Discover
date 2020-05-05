@@ -1,4 +1,5 @@
 import 'package:Discover/models/track.dart';
+import 'package:Discover/ui/views/track_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -70,6 +71,16 @@ class TrackItemList extends StatelessWidget {
         ),
       ),
       child: ListTile(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CurrentTrackView(
+                track: trk,
+              ),
+            ),
+          );
+        },
         trailing: buildIcon(trk),
         title: Text(
           DateFormat('EEEE, MMM d').format(trk.date),
