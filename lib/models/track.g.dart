@@ -17,7 +17,7 @@ class TrackAdapter extends TypeAdapter<Track> {
       for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Track(
-      sound: (fields[0] as List)?.cast<dynamic>(),
+      sound: (fields[0] as List)?.cast<double>(),
       date: fields[1] as DateTime,
       isSaved: fields[2] as bool,
     );

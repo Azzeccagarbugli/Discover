@@ -27,19 +27,14 @@ class BackFlipCard extends StatefulWidget {
 class _BackFlipCardState extends State<BackFlipCard> {
   bool _isSaving = false;
 
-  Track _trk;
-
-  List<double> _values = new List<double>();
+  List<double> _values;
 
   Box<Track> _trackBox;
-
-  void _createSoundList(List<double> list, double val) {
-    list.add(val);
-  }
 
   @override
   void initState() {
     super.initState();
+    _values = new List<double>();
     _trackBox = Hive.box<Track>(Discover.trackBoxName);
   }
 
@@ -49,8 +44,8 @@ class _BackFlipCardState extends State<BackFlipCard> {
       _isSaving = false;
     }
 
-    if (_isSaving) {
-      _createSoundList(_values, widget._value);
+    if (_isSaving && widget._isRecording) {
+      _values.add(widget._value);
     }
 
     return Stack(
@@ -115,14 +110,13 @@ class _BackFlipCardState extends State<BackFlipCard> {
                     setState(() {
                       _isSaving = !_isSaving;
 
-                      if (_isSaving && widget._isRecording) {
-                        _trk = new Track(
-                          date: DateTime.now(),
-                          sound: _values,
-                          isSaved: false,
-                        );
-                        _trackBox.add(_trk);
-                      }
+                      Track _trk = new Track(
+                        date: DateTime.now(),
+                        sound: _values,
+                        isSaved: false,
+                      );
+
+                      if (_values.isNotEmpty) _trackBox.add(_trk);
                     });
                   },
                   useCache: false,

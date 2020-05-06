@@ -1,7 +1,12 @@
+import 'dart:math';
+
 import 'package:Discover/models/track.dart';
-import 'package:Discover/ui/widgets/effects/remove_glow_listview.dart';
+import 'package:Discover/ui/widgets/bar_graph.dart';
+import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_circular_chart/flutter_circular_chart.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class CurrentTrackView extends StatefulWidget {
   final Track track;
@@ -25,7 +30,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
     return LineChartData(
       gridData: FlGridData(
         show: false,
-        drawVerticalLine: false,
+        drawVerticalLine: true,
         getDrawingHorizontalLine: (value) {
           return FlLine(
             color: const Color(0xff37434d),
@@ -42,7 +47,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
       titlesData: FlTitlesData(
         show: false,
         bottomTitles: SideTitles(
-          showTitles: false,
+          showTitles: true,
           reservedSize: 22,
           textStyle: const TextStyle(
               color: Color(0xff68737d),
@@ -84,19 +89,12 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
         ),
       ),
       borderData: FlBorderData(
-        show: true,
-        border: Border.all(
-          color: const Color(0xff37434d),
-          width: 1,
-        ),
-      ),
+          show: false,
+          border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
       maxX: 11,
       minY: 0,
       maxY: 6,
-      lineTouchData: LineTouchData(
-        enabled: false,
-      ),
       lineBarsData: [
         LineChartBarData(
           spots: [
@@ -110,7 +108,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
           ],
           isCurved: true,
           colors: gradientColors,
-          barWidth: 2,
+          barWidth: 10,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: false,
@@ -128,18 +126,82 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          Expanded(
-            child: ScrollConfiguration(
-              behavior: RemoveGlow(),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 1.1,
-                  child: LineChart(
-                    mainData(),
-                  ),
+          Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height / 3,
+            child: LineChart(
+              mainData(),
+            ),
+          ),
+          Padding(
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).size.height / 3.5),
+            child: CardWithGraph(
+              widget: widget,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CardWithGraph extends StatelessWidget {
+  const CardWithGraph({
+    Key key,
+    @required this.widget,
+  }) : super(key: key);
+
+  final CurrentTrackView widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          Container(
+            decoration: new BoxDecoration(
+              color:
+                  ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(12.0),
+              ),
+              boxShadow: Neumorphism.boxShadow(context),
+            ),
+          ),
+          FractionalTranslation(
+            translation: Offset(0.0, -0.4),
+            child: Align(
+              alignment: FractionalOffset(0.5, 0.4),
+              child: Container(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 92,
+                ),
+                decoration: BoxDecoration(
+                  color: ThemeProvider.themeOf(context).id == "light_theme"
+                      ? Colors.white
+                      : Colors.grey[900],
+                  shape: BoxShape.circle,
+                  boxShadow: Neumorphism.boxShadow(context),
+                ),
+                child: AnimatedCircularChart(
+                  size: Size(280, 280),
+                  holeRadius: 3,
+                  initialChartData: <CircularStackEntry>[
+                    BarGraph.buildGraphMaxNoise(
+                        widget.track.sound.reduce(max), context),
+                    BarGraph.buildGraphMinNoise(
+                        widget.track.sound.reduce(min), context),
+                    BarGraph.buildGraphActualNoise(
+                        (widget.track.sound.reduce((a, b) => a + b) /
+                            widget.track.sound.length),
+                        context),
+                  ],
+                  chartType: CircularChartType.Radial,
+                  edgeStyle: SegmentEdgeStyle.round,
+                  percentageValues: true,
                 ),
               ),
             ),

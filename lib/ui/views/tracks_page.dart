@@ -34,7 +34,7 @@ class _TracksViewState extends State<TracksView> {
                 pathImg: ThemeProvider.themeOf(context).id == "light_theme"
                     ? "assets/images/tracks_light.png"
                     : "assets/images/tracks_dark.png",
-                title: "Any track found!",
+                title: "No track found!",
                 subtitile:
                     "If you would like to add a new track just go to the homepage and start to record a new session of sounds",
               );
@@ -46,9 +46,10 @@ class _TracksViewState extends State<TracksView> {
                 key: _myList,
                 separatorBuilder: (_, index) => Divider(),
                 itemCount: tracks.keys.cast<int>().toList().length,
+                reverse: true,
+                shrinkWrap: true,
                 itemBuilder: (_, index) {
-                  final int key =
-                      tracks.keys.cast<int>().toList().reversed.toList()[index];
+                  final int key = tracks.keys.cast<int>().toList()[index];
 
                   final Track trk = tracks.get(key);
 
