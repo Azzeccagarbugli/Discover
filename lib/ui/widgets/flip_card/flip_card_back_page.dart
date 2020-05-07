@@ -126,7 +126,7 @@ class _BackFlipCardState extends State<BackFlipCard> {
                   style: ThemeProvider.themeOf(context)
                       .data
                       .primaryTextTheme
-                      .title
+                      .headline6
                       .copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,
@@ -141,7 +141,7 @@ class _BackFlipCardState extends State<BackFlipCard> {
                   style: ThemeProvider.themeOf(context)
                       .data
                       .primaryTextTheme
-                      .body1,
+                      .bodyText1,
                   maxLines: 3,
                   overflow: TextOverflow.fade,
                 ),

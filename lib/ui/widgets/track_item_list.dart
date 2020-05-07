@@ -1,7 +1,7 @@
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/views/track_page.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -89,14 +89,14 @@ class TrackItemList extends StatelessWidget {
           style: ThemeProvider.themeOf(context)
               .data
               .primaryTextTheme
-              .title
+              .headline6
               .copyWith(
                 fontWeight: FontWeight.w600,
               ),
         ),
         subtitle: Text(
           'Recorded at ' + DateFormat('hh:mm a').format(trk.date),
-          style: ThemeProvider.themeOf(context).data.primaryTextTheme.body1,
+          style: ThemeProvider.themeOf(context).data.primaryTextTheme.bodyText1,
         ),
         leading: Container(
           height: 42,
@@ -108,10 +108,13 @@ class TrackItemList extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: FaIcon(
-              FontAwesomeIcons.play,
-              color: ThemeProvider.themeOf(context).data.accentColor,
-              size: 16,
+            child: Hero(
+              tag: this.trk.date,
+              child: FlareActor(
+                "assets/flares/recording.flr",
+                fit: BoxFit.scaleDown,
+                color: ThemeProvider.themeOf(context).data.accentColor,
+              ),
             ),
           ),
         ),

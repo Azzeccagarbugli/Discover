@@ -4,6 +4,7 @@ import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/bar_graph.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -21,102 +22,60 @@ class CurrentTrackView extends StatefulWidget {
 }
 
 class _CurrentTrackViewState extends State<CurrentTrackView> {
-  List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
-  ];
+  List<Color> gradientColors(BuildContext context) {
+    return [
+      ThemeProvider.themeOf(context).data.accentColor,
+      ThemeProvider.themeOf(context).data.textSelectionColor,
+    ];
+  }
 
-  LineChartData mainData() {
+  List<FlSpot> _buildGraph(Track trk) {
+    List<FlSpot> list = new List<FlSpot>();
+    double i = 0;
+    trk.sound.forEach((element) {
+      list.add(FlSpot(i, element));
+      i++;
+    });
+    return list;
+  }
+
+  LineChartData mainData(BuildContext context) {
     return LineChartData(
       gridData: FlGridData(
         show: false,
-        drawVerticalLine: true,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
       ),
       titlesData: FlTitlesData(
         show: false,
-        bottomTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 22,
-          textStyle: const TextStyle(
-              color: Color(0xff68737d),
-              fontWeight: FontWeight.bold,
-              fontSize: 16),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 2:
-                return 'MAR';
-              case 5:
-                return 'JUN';
-              case 8:
-                return 'SEP';
-            }
-            return '';
-          },
-          margin: 8,
-        ),
-        leftTitles: SideTitles(
-          showTitles: true,
-          textStyle: const TextStyle(
-            color: Color(0xff67727d),
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '10k';
-              case 3:
-                return '30k';
-              case 5:
-                return '50k';
-            }
-            return '';
-          },
-          reservedSize: 28,
-          margin: 12,
-        ),
       ),
       borderData: FlBorderData(
-          show: false,
-          border: Border.all(color: const Color(0xff37434d), width: 1)),
+        show: false,
+        border: Border.all(
+          color: const Color(0xff37434d),
+          width: 1,
+        ),
+      ),
       minX: 0,
-      maxX: 11,
+      maxX: widget.track.sound.length.toDouble() - 1,
       minY: 0,
-      maxY: 6,
+      maxY: 100,
+      lineTouchData: LineTouchData(
+        enabled: false,
+      ),
       lineBarsData: [
         LineChartBarData(
-          spots: [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
+          spots: _buildGraph(widget.track),
           isCurved: true,
-          colors: gradientColors,
-          barWidth: 10,
+          colors: gradientColors(context),
+          barWidth: 3,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: false,
           ),
           belowBarData: BarAreaData(
             show: true,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+            colors: gradientColors(context)
+                .map((color) => color.withOpacity(0.3))
+                .toList(),
           ),
         ),
       ],
@@ -126,13 +85,15 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:
+          ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
       body: Stack(
         children: <Widget>[
           Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height / 3,
             child: LineChart(
-              mainData(),
+              mainData(context),
             ),
           ),
           Padding(
@@ -162,22 +123,74 @@ class CardWithGraph extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Container(
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color:
                   ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(12.0),
+                top: Radius.circular(24.0),
               ),
               boxShadow: Neumorphism.boxShadow(context),
             ),
           ),
+          Container(
+            child: Column(
+              children: <Widget>[
+                CurvedListItem(
+                  title: 'MAX',
+                  time: 'TODAY 5:30 PM',
+                  color: Colors.red,
+                  nextColor: Colors.green,
+                  isFirst: true,
+                ),
+                CurvedListItem(
+                  title: 'MIN',
+                  time: 'TUESDAY 5:30 PM',
+                  color: Colors.green,
+                  nextColor: Colors.amber,
+                ),
+                CurvedListItem(
+                  title: 'AVG',
+                  time: 'FRIDAY 6:00 PM',
+                  color: Colors.amber,
+                  nextColor: ThemeProvider.themeOf(context)
+                      .data
+                      .scaffoldBackgroundColor,
+                ),
+                Expanded(
+                  child: RaisedButton(
+                    onPressed: () {},
+                    color: ThemeProvider.themeOf(context)
+                        .data
+                        .scaffoldBackgroundColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Continue',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           FractionalTranslation(
-            translation: Offset(0.0, -0.4),
+            translation: Offset(0.0, -0.45),
             child: Align(
-              alignment: FractionalOffset(0.5, 0.4),
+              alignment: FractionalOffset(0.5, 0.45),
               child: Container(
                 margin: const EdgeInsets.symmetric(
-                  horizontal: 92,
+                  horizontal: 104,
                 ),
                 decoration: BoxDecoration(
                   color: ThemeProvider.themeOf(context).id == "light_theme"
@@ -186,27 +199,142 @@ class CardWithGraph extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: Neumorphism.boxShadow(context),
                 ),
-                child: AnimatedCircularChart(
-                  size: Size(280, 280),
-                  holeRadius: 3,
-                  initialChartData: <CircularStackEntry>[
-                    BarGraph.buildGraphMaxNoise(
-                        widget.track.sound.reduce(max), context),
-                    BarGraph.buildGraphMinNoise(
-                        widget.track.sound.reduce(min), context),
-                    BarGraph.buildGraphActualNoise(
-                        (widget.track.sound.reduce((a, b) => a + b) /
-                            widget.track.sound.length),
-                        context),
-                  ],
-                  chartType: CircularChartType.Radial,
-                  edgeStyle: SegmentEdgeStyle.round,
-                  percentageValues: true,
+                child: CenterMedal(
+                  widget: widget,
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CenterMedal extends StatelessWidget {
+  const CenterMedal({
+    Key key,
+    @required this.widget,
+  }) : super(key: key);
+
+  final CurrentTrackView widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Center(
+          child: AnimatedCircularChart(
+            size: Size(220, 220),
+            initialChartData: <CircularStackEntry>[
+              BarGraph.buildGraphMaxNoise(
+                  widget.track.sound.reduce(max), context),
+              BarGraph.buildGraphMinNoise(
+                  widget.track.sound.reduce(min), context),
+              BarGraph.buildGraphActualNoise(
+                  (widget.track.sound.reduce((a, b) => a + b) /
+                      widget.track.sound.length),
+                  context),
+            ],
+            chartType: CircularChartType.Radial,
+            edgeStyle: SegmentEdgeStyle.round,
+            percentageValues: true,
+            holeRadius: 18,
+            duration: Duration(
+              milliseconds: 700,
+            ),
+          ),
+        ),
+        Center(
+          child: Container(
+            margin: const EdgeInsets.all(72),
+            decoration: BoxDecoration(
+              color: ThemeProvider.themeOf(context).id == "light_theme"
+                  ? Colors.white
+                  : Colors.grey[900],
+              shape: BoxShape.circle,
+              boxShadow: Neumorphism.boxShadow(context),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Hero(
+                tag: widget.track.date,
+                child: FlareActor(
+                  "assets/flares/recording.flr",
+                  fit: BoxFit.scaleDown,
+                  color: ThemeProvider.themeOf(context).data.accentColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CurvedListItem extends StatelessWidget {
+  const CurvedListItem({
+    this.title,
+    this.time,
+    this.icon,
+    this.people,
+    this.color,
+    this.nextColor,
+    this.isFirst = false,
+  });
+
+  final String title;
+  final String time;
+  final String people;
+  final IconData icon;
+  final Color color;
+  final Color nextColor;
+  final bool isFirst;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ClipRRect(
+        borderRadius: isFirst
+            ? BorderRadius.only(
+                topLeft: Radius.circular(24.0),
+                topRight: Radius.circular(24.0),
+              )
+            : BorderRadius.zero,
+        child: Container(
+          color: nextColor,
+          width: double.infinity,
+          child: Container(
+            decoration: new BoxDecoration(
+              color: color,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(66.0),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 14,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(66.0),
+                ),
+                child: Text(
+                  title,
+                  style: ThemeProvider.themeOf(context)
+                      .data
+                      .primaryTextTheme
+                      .headline6
+                      .copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 130,
+                      ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
