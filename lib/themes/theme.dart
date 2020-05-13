@@ -22,8 +22,12 @@ class CustomTheme {
       scaffoldBackgroundColor: Colors.white,
       accentColor: Colors.blue[500],
       primaryTextTheme: TextTheme(
-        headline6: TextStyle(color: Colors.grey[800]),
-        bodyText1: TextStyle(color: Colors.grey[600]),
+        headline6: TextStyle(
+          color: Colors.grey[800],
+        ),
+        bodyText1: TextStyle(
+          color: Colors.grey[600],
+        ),
       ),
     ),
   );
@@ -47,8 +51,12 @@ class CustomTheme {
       scaffoldBackgroundColor: Colors.grey[900],
       accentColor: Colors.amber[400],
       primaryTextTheme: TextTheme(
-        headline6: TextStyle(color: Colors.white),
-        bodyText1: TextStyle(color: Colors.grey[200]),
+        headline6: TextStyle(
+          color: Colors.white,
+        ),
+        bodyText1: TextStyle(
+          color: Colors.grey[200],
+        ),
       ),
     ),
   );

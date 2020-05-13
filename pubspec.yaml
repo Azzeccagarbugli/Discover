@@ -25,6 +25,8 @@ dependencies:
   flare_flutter: ^2.0.3
   flutter_slidable: ^0.5.4
   fl_chart: ^0.9.4
+  flutter_swiper: ^1.1.6
+  flutter_custom_clippers: ^1.1.1
 
 dev_dependencies:
   # flutter_test:

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/bar_graph.dart';
+import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flare_flutter/flare_actor.dart';
@@ -22,66 +23,6 @@ class CurrentTrackView extends StatefulWidget {
 }
 
 class _CurrentTrackViewState extends State<CurrentTrackView> {
-  List<Color> gradientColors(BuildContext context) {
-    return [
-      ThemeProvider.themeOf(context).data.accentColor,
-      ThemeProvider.themeOf(context).data.textSelectionColor,
-    ];
-  }
-
-  List<FlSpot> _buildGraph(Track trk) {
-    List<FlSpot> list = new List<FlSpot>();
-    double i = 0;
-    trk.sound.forEach((element) {
-      list.add(FlSpot(i, element));
-      i++;
-    });
-    return list;
-  }
-
-  LineChartData mainData(BuildContext context) {
-    return LineChartData(
-      gridData: FlGridData(
-        show: false,
-      ),
-      titlesData: FlTitlesData(
-        show: false,
-      ),
-      borderData: FlBorderData(
-        show: false,
-        border: Border.all(
-          color: const Color(0xff37434d),
-          width: 1,
-        ),
-      ),
-      minX: 0,
-      maxX: widget.track.sound.length.toDouble() - 1,
-      minY: 0,
-      maxY: 100,
-      lineTouchData: LineTouchData(
-        enabled: false,
-      ),
-      lineBarsData: [
-        LineChartBarData(
-          spots: _buildGraph(widget.track),
-          isCurved: true,
-          colors: gradientColors(context),
-          barWidth: 3,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            colors: gradientColors(context)
-                .map((color) => color.withOpacity(0.3))
-                .toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,8 +33,9 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
           Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height / 3,
-            child: LineChart(
-              mainData(context),
+            child: BuildLineGraph(
+              trk: widget.track,
+              enableTouch: true,
             ),
           ),
           Padding(
@@ -133,35 +75,44 @@ class CardWithGraph extends StatelessWidget {
             ),
           ),
           Container(
+            color: Colors.transparent,
             child: Column(
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                CurvedListItem(
-                  title: 'MAX',
-                  time: 'TODAY 5:30 PM',
-                  color: Colors.red,
-                  nextColor: Colors.green,
-                  isFirst: true,
+                Expanded(
+                  flex: 2,
+                  child: CurvedListItem(
+                    title: 'MAX',
+                    color: Colors.red,
+                    nextColor: Colors.green,
+                    isFirst: true,
+                  ),
                 ),
-                CurvedListItem(
-                  title: 'MIN',
-                  time: 'TUESDAY 5:30 PM',
-                  color: Colors.green,
-                  nextColor: Colors.amber,
+                Expanded(
+                  flex: 2,
+                  child: CurvedListItem(
+                    title: 'MIN',
+                    color: Colors.green,
+                    nextColor: Colors.amber,
+                  ),
                 ),
-                CurvedListItem(
-                  title: 'AVG',
-                  time: 'FRIDAY 6:00 PM',
-                  color: Colors.amber,
-                  nextColor: ThemeProvider.themeOf(context)
-                      .data
-                      .scaffoldBackgroundColor,
+                Expanded(
+                  flex: 2,
+                  child: CurvedListItem(
+                    title: 'AVG',
+                    color: Colors.amber,
+                    nextColor: ThemeProvider.themeOf(context)
+                        .data
+                        .scaffoldBackgroundColor,
+                  ),
                 ),
                 Expanded(
                   child: RaisedButton(
                     onPressed: () {},
                     color: ThemeProvider.themeOf(context)
                         .data
-                        .scaffoldBackgroundColor,
+                        .scaffoldBackgroundColor
+                        .withAlpha(32),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -294,45 +245,32 @@ class CurvedListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ClipRRect(
-        borderRadius: isFirst
-            ? BorderRadius.only(
-                topLeft: Radius.circular(24.0),
-                topRight: Radius.circular(24.0),
-              )
-            : BorderRadius.zero,
+    return ClipRRect(
+      borderRadius: isFirst
+          ? BorderRadius.only(
+              topLeft: Radius.circular(24.0),
+              topRight: Radius.circular(24.0),
+            )
+          : BorderRadius.zero,
+      child: Container(
+        width: double.infinity,
         child: Container(
-          color: nextColor,
-          width: double.infinity,
-          child: Container(
-            decoration: new BoxDecoration(
-              color: color,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(66.0),
-              ),
+          decoration: new BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(32.0),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 14,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(66.0),
+          ),
+          child: Text(
+            title,
+            style: ThemeProvider.themeOf(context)
+                .data
+                .primaryTextTheme
+                .headline6
+                .copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 130,
+                  color: color,
                 ),
-                child: Text(
-                  title,
-                  style: ThemeProvider.themeOf(context)
-                      .data
-                      .primaryTextTheme
-                      .headline6
-                      .copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 130,
-                      ),
-                ),
-              ),
-            ),
           ),
         ),
       ),
