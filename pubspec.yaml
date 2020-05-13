@@ -40,6 +40,8 @@ flutter:
     - assets/flares/recording.flr
     - assets/images/tracks_light.png
     - assets/images/tracks_dark.png
+    - assets/images/saved_dark.png
+    - assets/images/saved_light.png
   fonts:
     - family: Quicksand
       fonts:

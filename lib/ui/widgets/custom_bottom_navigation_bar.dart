@@ -37,7 +37,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           color: Colors.grey[800],
           iconSize: 24,
           padding: EdgeInsets.symmetric(
-            horizontal: 20,
+            horizontal: 15,
             vertical: 5,
           ),
           duration: Duration(
