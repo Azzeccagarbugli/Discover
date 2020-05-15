@@ -208,13 +208,10 @@ class CenterMedal extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Hero(
-                tag: widget.track.date,
-                child: FlareActor(
-                  "assets/flares/recording.flr",
-                  fit: BoxFit.scaleDown,
-                  color: ThemeProvider.themeOf(context).data.accentColor,
-                ),
+              child: FlareActor(
+                "assets/flares/recording.flr",
+                fit: BoxFit.scaleDown,
+                color: ThemeProvider.themeOf(context).data.accentColor,
               ),
             ),
           ),

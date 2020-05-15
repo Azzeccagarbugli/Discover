@@ -108,13 +108,10 @@ class TrackItemList extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: Hero(
-              tag: this.trk.date,
-              child: FlareActor(
-                "assets/flares/recording.flr",
-                fit: BoxFit.scaleDown,
-                color: ThemeProvider.themeOf(context).data.accentColor,
-              ),
+            child: FlareActor(
+              "assets/flares/recording.flr",
+              fit: BoxFit.scaleDown,
+              color: ThemeProvider.themeOf(context).data.accentColor,
             ),
           ),
         ),
