@@ -30,7 +30,7 @@ class NotFound extends StatelessWidget {
             style: ThemeProvider.themeOf(context)
                 .data
                 .primaryTextTheme
-                .title
+                .headline6
                 .copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 36,
@@ -47,7 +47,7 @@ class NotFound extends StatelessWidget {
               style: ThemeProvider.themeOf(context)
                   .data
                   .primaryTextTheme
-                  .body1
+                  .bodyText1
                   .copyWith(
                     fontSize: 16,
                   ),

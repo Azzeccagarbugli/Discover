@@ -4,7 +4,6 @@ import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/bar_graph.dart';
 import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';

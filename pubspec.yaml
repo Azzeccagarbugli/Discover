@@ -42,6 +42,8 @@ flutter:
     - assets/images/tracks_dark.png
     - assets/images/saved_dark.png
     - assets/images/saved_light.png
+    - assets/images/settings_dark.png
+    - assets/images/settings_light.png
   fonts:
     - family: Quicksand
       fonts:

@@ -7,7 +7,6 @@ import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/effects/remove_glow_listview.dart';
 import 'package:Discover/ui/widgets/not_found.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -81,7 +80,7 @@ class _SavedTracksViewState extends State<SavedTracksView> {
                               color: ThemeProvider.themeOf(context)
                                   .data
                                   .scaffoldBackgroundColor,
-                              height: MediaQuery.of(context).size.height / 1.8,
+                              height: MediaQuery.of(context).size.height / 1.6,
                               width: double.infinity,
                               child: BuildLineGraph(
                                 trk: trk,
@@ -118,7 +117,7 @@ class _SavedTracksViewState extends State<SavedTracksView> {
                           ),
                         ),
                         Positioned(
-                          top: MediaQuery.of(context).size.height / 1.9,
+                          top: MediaQuery.of(context).size.height / 1.85,
                           right: 16,
                           left: 16,
                           child: Container(
@@ -162,80 +161,38 @@ class _SavedTracksViewState extends State<SavedTracksView> {
                             horizontal: 20,
                             vertical: 22,
                           ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    DateFormat('EEEE, MMM d').format(trk.date),
-                                    style: ThemeProvider.themeOf(context)
-                                        .data
-                                        .primaryTextTheme
-                                        .bodyText1
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                    overflow: TextOverflow.fade,
-                                    maxLines: 1,
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Text(
-                                    'Recorded at ' +
-                                        DateFormat('hh:mm a').format(trk.date),
-                                    style: ThemeProvider.themeOf(context)
-                                        .data
-                                        .primaryTextTheme
-                                        .bodyText1
-                                        .copyWith(
-                                          fontSize: 16,
-                                        ),
-                                    overflow: TextOverflow.fade,
-                                    maxLines: 1,
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                child: Container(
-                                  width: 3,
-                                  height: 42,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(42),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: 52,
-                                  width: 52,
-                                  decoration: BoxDecoration(
-                                    color: ThemeProvider.themeOf(context).id ==
-                                            "light_theme"
-                                        ? Colors.white
-                                        : Colors.grey[900],
-                                    shape: BoxShape.circle,
-                                    boxShadow: Neumorphism.boxShadow(context),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: FlareActor(
-                                      "assets/flares/recording.flr",
-                                      fit: BoxFit.scaleDown,
-                                      color: ThemeProvider.themeOf(context)
-                                          .data
-                                          .accentColor,
+                              Text(
+                                DateFormat('EEEE, MMM d').format(trk.date),
+                                style: ThemeProvider.themeOf(context)
+                                    .data
+                                    .primaryTextTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 26,
                                     ),
-                                  ),
-                                ),
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                'Recorded at ' +
+                                    DateFormat('hh:mm a').format(trk.date),
+                                style: ThemeProvider.themeOf(context)
+                                    .data
+                                    .primaryTextTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      fontSize: 22,
+                                    ),
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
                               ),
                             ],
                           ),
