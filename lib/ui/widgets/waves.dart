@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:simple_animations/simple_animations.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class AnimatedWave extends StatelessWidget {
