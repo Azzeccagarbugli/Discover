@@ -27,6 +27,7 @@ dependencies:
   fl_chart: ^0.9.4
   flutter_swiper: ^1.1.6
   flutter_custom_clippers: ^1.1.1
+  permission_handler: ^5.0.0+hotfix.6
 
 dev_dependencies:
   # flutter_test:

@@ -1,10 +1,10 @@
 import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
-import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/tile_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:Discover/ui/widgets/title_page.dart';
 import 'package:hive/hive.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class SettingsView extends StatefulWidget {
@@ -13,6 +13,10 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
+  Future<bool> _checkMicPermission() async {
+    return await Permission.contacts.shouldShowRequestRationale;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,6 +32,47 @@ class _SettingsViewState extends State<SettingsView> {
             ),
             child: Column(
               children: <Widget>[
+                TileSettings(
+                  background: ThemeProvider.themeOf(context)
+                      .data
+                      .scaffoldBackgroundColor,
+                  isAlert: false,
+                  iconLead: Icon(
+                    Icons.mic,
+                    color: ThemeProvider.themeOf(context).data.accentColor,
+                  ),
+                  title: "Microphone permission",
+                  subtitle:
+                      "Grant or deny the usage of the microphone, you should allow it",
+                  onTap: () async {
+                    if (await Permission.microphone.isDenied) {
+                      openAppSettings();
+                    }
+                  },
+                  widgetTrail: FutureBuilder(
+                    future: Permission.microphone.isGranted,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      if (snapshot.hasError) {
+                        return Icon(
+                          Icons.help_outline,
+                          color: Colors.orange,
+                        );
+                      } else {
+                        return snapshot.data == true
+                            ? Icon(
+                                Icons.check_circle,
+                                color: Colors.green[400],
+                              )
+                            : Icon(
+                                Icons.cancel,
+                                color: Colors.red[400],
+                              );
+                      }
+                    },
+                  ),
+                ),
+                Divider(),
                 TileSettings(
                   background: ThemeProvider.themeOf(context)
                       .data
@@ -97,28 +142,50 @@ class _SettingsViewState extends State<SettingsView> {
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
-                          content: Text(
-                            "All your data will no longer be recoverable, then don't get angry please",
-                            style: ThemeProvider.themeOf(context)
-                                .data
-                                .primaryTextTheme
-                                .bodyText1,
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                "All your data will no longer be recoverable, then don't get angry please",
+                                style: ThemeProvider.themeOf(context)
+                                    .data
+                                    .primaryTextTheme
+                                    .bodyText1,
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Hive.box<Track>(Discover.trackBoxName)
+                                      .clear();
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "DELETE",
+                                  style: ThemeProvider.themeOf(context)
+                                      .data
+                                      .primaryTextTheme
+                                      .headline6
+                                      .copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                color: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(25.0),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          actions: <Widget>[
-                            FlatButton(
-                              onPressed: () {},
-                              child: Text("data"),
-                            ),
-                            FlatButton(
-                              onPressed: () {},
-                              child: Text("data"),
-                            ),
-                          ],
                         );
                       },
                     );
-
-                    // Hive.box<Track>(Discover.trackBoxName).clear();
                   },
                 ),
               ],
