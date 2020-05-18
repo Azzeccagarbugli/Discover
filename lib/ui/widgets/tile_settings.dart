@@ -49,24 +49,30 @@ class TileSettings extends StatelessWidget {
           child: ListTile(
             isThreeLine: true,
             onTap: onTap,
-            title: Text(
-              title,
-              style: isAlert
-                  ? ThemeProvider.themeOf(context)
-                      .data
-                      .primaryTextTheme
-                      .headline6
-                      .copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      )
-                  : ThemeProvider.themeOf(context)
-                      .data
-                      .primaryTextTheme
-                      .headline6
-                      .copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+            title: Row(
+              children: <Widget>[
+                Text(
+                  title,
+                  style: isAlert
+                      ? ThemeProvider.themeOf(context)
+                          .data
+                          .primaryTextTheme
+                          .headline6
+                          .copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          )
+                      : ThemeProvider.themeOf(context)
+                          .data
+                          .primaryTextTheme
+                          .headline6
+                          .copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                ),
+                Spacer(),
+                widgetTrail != null ? widgetTrail : SizedBox(),
+              ],
             ),
             subtitle: Text(
               subtitle,
@@ -98,7 +104,6 @@ class TileSettings extends StatelessWidget {
                 child: iconLead,
               ),
             ),
-            trailing: widgetTrail,
           ),
         ),
       ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
+import 'package:Discover/ui/widgets/flip_card/flip_card_back_page.dart';
 import 'package:Discover/ui/widgets/flip_card/flip_card_controller.dart';
 import 'package:Discover/ui/widgets/waves.dart';
 import 'package:flutter/material.dart';
@@ -56,8 +57,8 @@ class _HomepageViewState extends State<HomepageView>
       vsync: this,
     );
     _offsetAnimation = Tween<Offset>(
-      begin: Offset(0.0, -1.0),
-      end: const Offset(0.0, 0.2),
+      begin: Offset(0.0, -2.0),
+      end: const Offset(0.0, 0.1),
     ).animate(CurvedAnimation(
       parent: _controllerTopWidget,
       curve: Curves.elasticInOut,
@@ -137,6 +138,18 @@ class _HomepageViewState extends State<HomepageView>
     );
   }
 
+  Color _colorDB(double val) {
+    if (val > 0 && val < 20) {
+      return Colors.green[300];
+    } else if (val > 20 && val < 60) {
+      return Colors.green[400];
+    } else if (val > 60 && val < 80) {
+      return Colors.red[600];
+    } else {
+      return Colors.red[800];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isRecording) {
@@ -150,60 +163,106 @@ class _HomepageViewState extends State<HomepageView>
     return Scaffold(
       backgroundColor:
           ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
-      body: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topCenter,
-            child: SlideTransition(
-              position: _offsetAnimation,
-              child: Container(
-                decoration: new BoxDecoration(
-                  color: ThemeProvider.themeOf(context)
-                      .data
-                      .scaffoldBackgroundColor,
-                  boxShadow: Neumorphism.boxShadow(context),
-                  shape: BoxShape.circle,
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: SlideTransition(
+                position: _offsetAnimation,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: new BoxDecoration(
+                    color: ThemeProvider.themeOf(context)
+                        .data
+                        .scaffoldBackgroundColor,
+                    boxShadow: Neumorphism.boxShadow(context),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        12.0,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      AnimatedContainer(
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: new BoxDecoration(
+                          color: _colorDB(_noiseDB),
+                          shape: BoxShape.circle,
+                        ),
+                        duration: Duration(milliseconds: 600),
+                        height: 10,
+                        width: 10,
+                      ),
+                      Text(
+                        "Level of decibel around you: ",
+                        style: ThemeProvider.themeOf(context)
+                            .data
+                            .primaryTextTheme
+                            .headline6
+                            .copyWith(
+                              fontSize: 18,
+                            ),
+                      ),
+                      Text(
+                        _noiseDB.toStringAsFixed(0),
+                        style: ThemeProvider.themeOf(context)
+                            .data
+                            .primaryTextTheme
+                            .headline6
+                            .copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                      ),
+                    ],
+                  ),
+                  width: double.infinity,
+                  height: 50,
                 ),
-                width: 130,
-                height: 130,
               ),
             ),
-          ),
-          _onBottom(AnimatedWave(
-            height: 220,
-            speed: 0.2,
-            offset: 1,
-            context: context,
-          )),
-          _onBottom(AnimatedWave(
-            height: 240,
-            speed: 0.9,
-            offset: pi,
-            context: context,
-          )),
-          _onBottom(AnimatedWave(
-            height: 180,
-            speed: 0.4,
-            offset: pi / 2,
-            context: context,
-          )),
-          Center(
-            child: FlipCardController(
-              chartKey: _chartKey,
-              maxNoiseDB: _maxNoiseDB,
-              minNoiseDB: _minNoiseDB,
-              noiseDB: _noiseDB,
-              isRecording: _isRecording,
-              controller: _controllerPopUpButton,
-              onTap: () {
-                if (!this._isRecording) {
-                  return this.startRecorder();
-                }
-                this.stopRecorder();
-              },
+            _onBottom(AnimatedWave(
+              height: 220,
+              speed: 0.2,
+              offset: 1,
+              context: context,
+            )),
+            _onBottom(AnimatedWave(
+              height: 240,
+              speed: 0.9,
+              offset: pi,
+              context: context,
+            )),
+            _onBottom(AnimatedWave(
+              height: 180,
+              speed: 0.4,
+              offset: pi / 2,
+              context: context,
+            )),
+            Center(
+              child: FlipCardController(
+                chartKey: _chartKey,
+                maxNoiseDB: _maxNoiseDB,
+                minNoiseDB: _minNoiseDB,
+                noiseDB: _noiseDB,
+                isRecording: _isRecording,
+                controller: _controllerPopUpButton,
+                onTap: () {
+                  if (!this._isRecording) {
+                    return this.startRecorder();
+                  }
+                  this.stopRecorder();
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

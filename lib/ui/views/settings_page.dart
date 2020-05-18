@@ -39,11 +39,9 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   title: "Microphone permission",
                   subtitle:
-                      "Grant or deny the usage of the microphone, you should allow it",
+                      "Enable or disable the usage of the microphone to allow the app to works",
                   onTap: () async {
-                    if (await Permission.microphone.isDenied) {
-                      openAppSettings();
-                    }
+                    openAppSettings();
                   },
                   widgetTrail: FutureBuilder(
                     future: Permission.microphone.isGranted,
@@ -92,7 +90,7 @@ class _SettingsViewState extends State<SettingsView> {
                       ? "Dark mode"
                       : "Light mode",
                   subtitle: ThemeProvider.themeOf(context).id == "light_theme"
-                      ? "Enjoy the darkness right now and safe your battery"
+                      ? "Enjoy the dark theme right now and save your battery"
                       : "If you praise the sun this is exactly made for you",
                   onTap: () {
                     ThemeProvider.controllerOf(context).nextTheme();
@@ -122,7 +120,7 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   title: "Delete all the tracks",
                   subtitle:
-                      "In this way you will fully erase your tracks, even the saved ones",
+                      "In this way you will remove all the tracks registered in the app",
                   onTap: () {
                     showDialog(
                       context: context,

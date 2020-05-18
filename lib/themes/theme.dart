@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class CustomTheme {
-  static AppTheme lightTheme = new AppTheme(
+  AppTheme lightTheme = new AppTheme(
     id: "light_theme",
     description: "Light Color Scheme",
     options: SystemUI(
@@ -32,7 +32,7 @@ class CustomTheme {
     ),
   );
 
-  static AppTheme darkTheme = new AppTheme(
+  AppTheme darkTheme = new AppTheme(
     id: "dark_theme",
     description: "Dark Color Scheme",
     options: SystemUI(

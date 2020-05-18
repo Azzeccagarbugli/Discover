@@ -34,7 +34,6 @@ class TitlePage extends StatelessWidget {
               ThemeProvider.themeOf(context).id == "light_theme"
                   ? "assets/images/settings_light.png"
                   : "assets/images/settings_dark.png",
-              scale: 6,
             ),
           ),
           Align(
@@ -66,7 +65,7 @@ class TitlePage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Be comfortable",
+                          "Feel comfortable",
                           style: TextStyle(
                             fontSize: 22,
                           ),

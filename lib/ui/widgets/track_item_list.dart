@@ -71,16 +71,16 @@ class TrackItemList extends StatelessWidget {
         ),
       ),
       child: ListTile(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CurrentTrackView(
-                track: trk,
-              ),
-            ),
-          );
-        },
+        // onTap: () {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => CurrentTrackView(
+        //         track: trk,
+        //       ),
+        //     ),
+        //   );
+        // },
         trailing: buildIcon(trk),
         title: Text(
           DateFormat('EEEE, MMM d').format(trk.date),
