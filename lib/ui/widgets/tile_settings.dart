@@ -34,12 +34,12 @@ class TileSettings extends StatelessWidget {
       child: Container(
         decoration: new BoxDecoration(
           color: background,
-          boxShadow: Neumorphism.boxShadow(context),
-          borderRadius: const BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(
               12.0,
             ),
           ),
+          boxShadow: Neumorphism.boxShadow(context),
         ),
         child: Theme(
           data: ThemeData(
@@ -98,12 +98,7 @@ class TileSettings extends StatelessWidget {
                 child: iconLead,
               ),
             ),
-            trailing: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 16,
-              ),
-              child: widgetTrail,
-            ),
+            trailing: widgetTrail,
           ),
         ),
       ),

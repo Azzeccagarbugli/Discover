@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/flip_card/flip_card_controller.dart';
 import 'package:Discover/ui/widgets/waves.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,8 @@ class _HomepageViewState extends State<HomepageView>
 
   AnimationController _controllerPopUpButton;
   AnimationController _controllerFadeWave;
+  AnimationController _controllerTopWidget;
+  Animation<Offset> _offsetAnimation;
 
   @override
   void initState() {
@@ -46,12 +49,26 @@ class _HomepageViewState extends State<HomepageView>
       ),
       vsync: this,
     );
+    _controllerTopWidget = AnimationController(
+      duration: const Duration(
+        seconds: 3,
+      ),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(0.0, -1.0),
+      end: const Offset(0.0, 0.2),
+    ).animate(CurvedAnimation(
+      parent: _controllerTopWidget,
+      curve: Curves.elasticInOut,
+    ));
   }
 
   @override
   void dispose() {
     _controllerFadeWave.dispose();
     _controllerPopUpButton.dispose();
+    _controllerTopWidget.dispose();
     if (_noiseSubscription != null) {
       _noiseSubscription.cancel();
     }
@@ -125,51 +142,68 @@ class _HomepageViewState extends State<HomepageView>
     if (_isRecording) {
       _cycleSamples();
       _controllerFadeWave.forward();
+      _controllerTopWidget.forward();
     } else {
       _controllerFadeWave.reverse();
+      _controllerTopWidget.reverse();
     }
     return Scaffold(
       backgroundColor:
           ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
-      body: Container(
-        child: Stack(
-          children: <Widget>[
-            _onBottom(AnimatedWave(
-              height: 220,
-              speed: 0.2,
-              offset: 1,
-              context: context,
-            )),
-            _onBottom(AnimatedWave(
-              height: 240,
-              speed: 0.9,
-              offset: pi,
-              context: context,
-            )),
-            _onBottom(AnimatedWave(
-              height: 180,
-              speed: 0.4,
-              offset: pi / 2,
-              context: context,
-            )),
-            Center(
-              child: FlipCardController(
-                chartKey: _chartKey,
-                maxNoiseDB: _maxNoiseDB,
-                minNoiseDB: _minNoiseDB,
-                noiseDB: _noiseDB,
-                isRecording: _isRecording,
-                controller: _controllerPopUpButton,
-                onTap: () {
-                  if (!this._isRecording) {
-                    return this.startRecorder();
-                  }
-                  this.stopRecorder();
-                },
+      body: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topCenter,
+            child: SlideTransition(
+              position: _offsetAnimation,
+              child: Container(
+                decoration: new BoxDecoration(
+                  color: ThemeProvider.themeOf(context)
+                      .data
+                      .scaffoldBackgroundColor,
+                  boxShadow: Neumorphism.boxShadow(context),
+                  shape: BoxShape.circle,
+                ),
+                width: 130,
+                height: 130,
               ),
             ),
-          ],
-        ),
+          ),
+          _onBottom(AnimatedWave(
+            height: 220,
+            speed: 0.2,
+            offset: 1,
+            context: context,
+          )),
+          _onBottom(AnimatedWave(
+            height: 240,
+            speed: 0.9,
+            offset: pi,
+            context: context,
+          )),
+          _onBottom(AnimatedWave(
+            height: 180,
+            speed: 0.4,
+            offset: pi / 2,
+            context: context,
+          )),
+          Center(
+            child: FlipCardController(
+              chartKey: _chartKey,
+              maxNoiseDB: _maxNoiseDB,
+              minNoiseDB: _minNoiseDB,
+              noiseDB: _noiseDB,
+              isRecording: _isRecording,
+              controller: _controllerPopUpButton,
+              onTap: () {
+                if (!this._isRecording) {
+                  return this.startRecorder();
+                }
+                this.stopRecorder();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -13,10 +13,6 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  Future<bool> _checkMicPermission() async {
-    return await Permission.contacts.shouldShowRequestRationale;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,13 +56,21 @@ class _SettingsViewState extends State<SettingsView> {
                         );
                       } else {
                         return snapshot.data == true
-                            ? Icon(
-                                Icons.check_circle,
-                                color: Colors.green[400],
+                            ? Container(
+                                height: 10,
+                                width: 10,
+                                decoration: new BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green[400],
+                                ),
                               )
-                            : Icon(
-                                Icons.cancel,
-                                color: Colors.red[400],
+                            : Container(
+                                height: 10,
+                                width: 10,
+                                decoration: new BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.red[400],
+                                ),
                               );
                       }
                     },
