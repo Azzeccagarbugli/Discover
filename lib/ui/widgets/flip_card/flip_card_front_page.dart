@@ -37,7 +37,7 @@ class FrontFlipCard extends StatelessWidget {
       children: <Widget>[
         Center(
           child: Container(
-            margin: const EdgeInsets.all(42),
+            margin: const EdgeInsets.all(26),
             decoration: BoxDecoration(
               color: ThemeProvider.themeOf(context).id == "light_theme"
                   ? Colors.white
@@ -60,7 +60,7 @@ class FrontFlipCard extends StatelessWidget {
             child: SpringButton(
               SpringButtonType.OnlyScale,
               Container(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(34),
                 decoration: new BoxDecoration(
                   color: this._isRecording
                       ? Colors.red[600]

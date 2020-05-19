@@ -13,7 +13,6 @@ class TitlePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(
-        top: 48,
         left: 12,
         right: 12,
       ),

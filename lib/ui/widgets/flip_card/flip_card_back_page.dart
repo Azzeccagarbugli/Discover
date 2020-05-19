@@ -54,7 +54,7 @@ class _BackFlipCardState extends State<BackFlipCard> {
           child: Container(
             height: 350,
             width: 350,
-            margin: const EdgeInsets.all(42),
+            margin: const EdgeInsets.all(26),
             decoration: new BoxDecoration(
               color: ThemeProvider.themeOf(context).id == "light_theme"
                   ? Colors.white
@@ -132,18 +132,23 @@ class _BackFlipCardState extends State<BackFlipCard> {
                         fontSize: 24,
                       ),
                 ),
-                subtitle: Text(
-                  widget._isRecording
-                      ? (!_isSaving
-                          ? "Tap to save and store the current session of sounds"
-                          : "Tap to stop saving the current session of sounds")
-                      : "Start to feel the sound around you, tap the mic on the other side",
-                  style: ThemeProvider.themeOf(context)
-                      .data
-                      .primaryTextTheme
-                      .bodyText1,
-                  maxLines: 3,
-                  overflow: TextOverflow.fade,
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 4,
+                  ),
+                  child: Text(
+                    widget._isRecording
+                        ? (!_isSaving
+                            ? "Tap to save and store the current session of sounds"
+                            : "Tap to stop saving the current session of sounds")
+                        : "Start to feel the sound around you, tap the mic on the other side",
+                    style: ThemeProvider.themeOf(context)
+                        .data
+                        .primaryTextTheme
+                        .bodyText1,
+                    maxLines: 3,
+                    overflow: TextOverflow.fade,
+                  ),
                 ),
                 trailing: this.widget._isRecording
                     ? (this._isSaving

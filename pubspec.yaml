@@ -28,10 +28,9 @@ dependencies:
   flutter_swiper: ^1.1.6
   flutter_custom_clippers: ^1.1.1
   permission_handler: ^5.0.0+hotfix.6
+  listview_utils: ^0.1.6+1
 
 dev_dependencies:
-  # flutter_test:
-  #   sdk: flutter
   hive_generator: ^0.7.0+2
   build_runner: ^1.9.0
 

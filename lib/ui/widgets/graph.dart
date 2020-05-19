@@ -39,7 +39,7 @@ class _MainGraphState extends State<MainGraph> {
     if (widget.isActive) _cycleSamples(context);
     return AnimatedCircularChart(
       key: widget.chartKey,
-      size: Size(350, 350),
+      size: MediaQuery.of(context).size,
       initialChartData: <CircularStackEntry>[
         BarGraph.buildGraphMaxNoise(widget.maxNoiseDB, context),
         BarGraph.buildGraphMinNoise(widget.minNoiseDB, context),
