@@ -3,6 +3,7 @@ import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/tile_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:Discover/ui/widgets/title_page.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:hive/hive.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -24,7 +25,62 @@ class _SettingsViewState extends State<SettingsView> {
             height: 32,
           ),
           Container(
-            child: TitlePage(),
+            child: TitlePage(
+              content: Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Image.asset(
+                      ThemeProvider.themeOf(context).id == "light_theme"
+                          ? "assets/images/settings_light.png"
+                          : "assets/images/settings_dark.png",
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.horizontal(
+                        left: Radius.circular(25),
+                        right: Radius.circular(25),
+                      ),
+                      child: ClipPath(
+                        clipper: WaveClipperTwo(reverse: true),
+                        child: Container(
+                          height: 110,
+                          decoration: BoxDecoration(
+                            color: ThemeProvider.themeOf(context)
+                                .data
+                                .textSelectionColor,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  "Settings",
+                                  style: TextStyle(
+                                    fontSize: 34,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  "Feel comfortable",
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             height: MediaQuery.of(context).size.height / 4,
           ),
           Expanded(

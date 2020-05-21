@@ -48,7 +48,21 @@ class _TracksViewState extends State<TracksView> {
               itemCount: tracks.keys.cast<int>().toList().length,
               shrinkWrap: true,
               header: Container(
-                child: TitlePage(),
+                child: TitlePage(
+                  content: Center(
+                    child: Text(
+                      "Tracks page",
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .primaryTextTheme
+                          .headline6
+                          .copyWith(
+                            fontSize: 42,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                ),
                 margin: const EdgeInsets.only(
                   top: 8,
                 ),
