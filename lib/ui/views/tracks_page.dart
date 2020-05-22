@@ -1,12 +1,16 @@
 import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
+import 'package:Discover/ui/widgets/bar_line.dart';
+import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/effects/remove_glow_listview.dart';
 import 'package:Discover/ui/widgets/lateral_action.dart';
 import 'package:Discover/ui/widgets/not_found.dart';
+import 'package:Discover/ui/widgets/saved_item.dart';
 import 'package:Discover/ui/widgets/title_page.dart';
 import 'package:Discover/ui/widgets/track_item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listview_utils/listview_utils.dart';
@@ -40,6 +44,18 @@ class _TracksViewState extends State<TracksView> {
             );
           }
 
+          List c = [
+            Container(
+              color: Colors.red,
+            ),
+            Container(
+              color: Colors.orange,
+            ),
+            Container(
+              color: Colors.green,
+            ),
+          ];
+
           return ScrollConfiguration(
             behavior: RemoveGlow(),
             child: CustomListView(
@@ -49,18 +65,59 @@ class _TracksViewState extends State<TracksView> {
               shrinkWrap: true,
               header: Container(
                 child: TitlePage(
-                  content: Center(
-                    child: Text(
-                      "Tracks page",
-                      style: ThemeProvider.themeOf(context)
-                          .data
-                          .primaryTextTheme
-                          .headline6
-                          .copyWith(
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold,
+                  useDecoration: false,
+                  content: Swiper(
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: 24,
+                        ),
+                        decoration: BoxDecoration(
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .scaffoldBackgroundColor,
+                          boxShadow: Neumorphism.boxShadow(context),
+                          borderRadius: const BorderRadius.horizontal(
+                            left: Radius.circular(25),
+                            right: Radius.circular(25),
                           ),
-                    ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.horizontal(
+                            left: Radius.circular(25),
+                            right: Radius.circular(25),
+                          ),
+                          child: Stack(
+                            children: <Widget>[
+                              // BuildLineGraph(
+                              //   trk: tracks.get(
+                              //       tracks.keys.cast<int>().toList()[index]),
+                              //   enableTouch: false,
+                              // ),
+                              c[index],
+                              Positioned(
+                                bottom: -18,
+                                left: 0,
+                                child: Text(
+                                  "MAX",
+                                  style: ThemeProvider.themeOf(context)
+                                      .data
+                                      .primaryTextTheme
+                                      .headline6
+                                      .copyWith(
+                                        fontSize: 62,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: c.length,
+                    viewportFraction: 0.7,
+                    scale: 0.7,
                   ),
                 ),
                 margin: const EdgeInsets.only(

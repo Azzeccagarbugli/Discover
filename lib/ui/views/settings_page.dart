@@ -26,6 +26,7 @@ class _SettingsViewState extends State<SettingsView> {
           ),
           Container(
             child: TitlePage(
+              useDecoration: true,
               content: Stack(
                 children: <Widget>[
                   Align(
