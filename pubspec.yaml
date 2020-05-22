@@ -44,6 +44,9 @@ flutter:
     - assets/images/saved_light.png
     - assets/images/settings_dark.png
     - assets/images/settings_light.png
+    - assets/images/list_light.png
+    - assets/images/list_dark.png
+
   fonts:
     - family: Quicksand
       fonts:
