@@ -101,18 +101,15 @@ class TrackItemList extends StatelessWidget {
         leading: Container(
           height: 42,
           width: 42,
-          padding: const EdgeInsets.all(6),
           decoration: new BoxDecoration(
             color: ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
             boxShadow: Neumorphism.boxShadow(context),
             shape: BoxShape.circle,
           ),
-          child: Center(
-            child: FlareActor(
-              "assets/flares/recording.flr",
-              fit: BoxFit.scaleDown,
-              color: ThemeProvider.themeOf(context).data.accentColor,
-            ),
+          child: Icon(
+            Icons.timeline,
+            size: 26,
+            color: ThemeProvider.themeOf(context).data.accentColor,
           ),
         ),
       ),
