@@ -17,7 +17,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:listview_utils/listview_utils.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -101,6 +100,7 @@ class _TracksViewState extends State<TracksView> {
             behavior: RemoveGlow(),
             child: CustomListView(
               key: _myList,
+              disableRefresh: true,
               separatorBuilder: (_, index) => Divider(),
               itemCount: tracks.keys.cast<int>().toList().length,
               shrinkWrap: true,
