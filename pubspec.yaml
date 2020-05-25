@@ -29,6 +29,7 @@ dependencies:
   flutter_custom_clippers: ^1.1.1
   permission_handler: ^5.0.0+hotfix.6
   listview_utils: ^0.1.6+1
+  intro_slider: ^2.3.1
 
 dev_dependencies:
   hive_generator: ^0.7.0+2
@@ -46,6 +47,7 @@ flutter:
     - assets/images/settings_light.png
     - assets/images/list_light.png
     - assets/images/list_dark.png
+    - assets/images/welcome/
 
   fonts:
     - family: Quicksand

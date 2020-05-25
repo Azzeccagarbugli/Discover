@@ -1,5 +1,6 @@
 import 'package:Discover/models/track.dart';
 import 'package:Discover/themes/theme.dart';
+import 'package:Discover/ui/views/intro.dart';
 import 'package:Discover/ui/views/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,12 +33,13 @@ class Discover extends StatelessWidget {
         _customTheme.getLight(),
         _customTheme.getDark(),
       ],
-      saveThemesOnChange: true,
-      loadThemeOnInit: true,
+      // saveThemesOnChange: true,
+      // loadThemeOnInit: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: ThemeConsumer(
-          child: NavigationView(),
+          // child: NavigationView(),
+          child: IntroView(),
         ),
       ),
     );
