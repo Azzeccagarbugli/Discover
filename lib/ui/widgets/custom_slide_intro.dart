@@ -11,6 +11,7 @@ class CustomSlideIntro extends StatelessWidget {
   final String subtitile;
   final double scaleLight;
   final double scaleDark;
+  final int index;
 
   final SwiperController controller;
 
@@ -22,6 +23,7 @@ class CustomSlideIntro extends StatelessWidget {
     this.controller,
     this.scaleLight,
     this.scaleDark,
+    this.index,
   }) : super(key: key);
 
   @override
@@ -118,7 +120,7 @@ class CustomSlideIntro extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "NEXT",
+                        index == 4 ? "FINISH" : "NEXT",
                         style: ThemeProvider.themeOf(context)
                             .data
                             .primaryTextTheme

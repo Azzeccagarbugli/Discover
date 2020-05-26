@@ -14,7 +14,7 @@ class _IntroViewState extends State<IntroView> {
   final CustomTheme _customTheme = new CustomTheme();
   final SwiperController _controller = new SwiperController();
 
-  List<CustomSlideIntro> _listSlides(BuildContext context) {
+  List<CustomSlideIntro> _listSlides(BuildContext context, int index) {
     return [
       CustomSlideIntro(
         pathImage: ThemeProvider.themeOf(context).id == "light_theme"
@@ -26,6 +26,7 @@ class _IntroViewState extends State<IntroView> {
         controller: _controller,
         scaleLight: 3.5,
         scaleDark: 4.5,
+        index: index,
       ),
       CustomSlideIntro(
         pathImage: ThemeProvider.themeOf(context).id == "light_theme"
@@ -37,6 +38,7 @@ class _IntroViewState extends State<IntroView> {
         controller: _controller,
         scaleLight: 3.0,
         scaleDark: 4.0,
+        index: index,
       ),
       CustomSlideIntro(
         pathImage: ThemeProvider.themeOf(context).id == "light_theme"
@@ -48,6 +50,7 @@ class _IntroViewState extends State<IntroView> {
         controller: _controller,
         scaleLight: 3.0,
         scaleDark: 3.2,
+        index: index,
       ),
       CustomSlideIntro(
         pathImage: ThemeProvider.themeOf(context).id == "light_theme"
@@ -59,6 +62,7 @@ class _IntroViewState extends State<IntroView> {
         controller: _controller,
         scaleLight: 3.2,
         scaleDark: 3.2,
+        index: index,
       ),
       CustomSlideIntro(
         pathImage: ThemeProvider.themeOf(context).id == "light_theme"
@@ -70,6 +74,7 @@ class _IntroViewState extends State<IntroView> {
         controller: _controller,
         scaleDark: 4.0,
         scaleLight: 4.4,
+        index: index,
       ),
     ];
   }
@@ -85,9 +90,9 @@ class _IntroViewState extends State<IntroView> {
     );
     return Swiper(
       itemBuilder: (BuildContext context, int index) {
-        return _listSlides(context)[index];
+        return _listSlides(context, index)[index];
       },
-      itemCount: _listSlides(context).length,
+      itemCount: 5,
       controller: _controller,
       duration: 600,
       pagination: SwiperPagination(
