@@ -29,7 +29,10 @@ dependencies:
   flutter_custom_clippers: ^1.1.1
   permission_handler: ^5.0.0+hotfix.6
   listview_utils: ^0.1.6+1
-  intro_slider: ^2.3.1
+  liquid_swipe:
+    git:
+      url: git://github.com/iamSahdeep/liquid_swipe_flutter.git
+      ref: 1.5.0VDEV
 
 dev_dependencies:
   hive_generator: ^0.7.0+2

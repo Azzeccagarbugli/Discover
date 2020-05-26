@@ -1,11 +1,9 @@
-import 'package:Discover/themes/theme.dart';
 import 'package:Discover/ui/views/home_page.dart';
 import 'package:Discover/ui/views/saved_tracks_page.dart';
 import 'package:Discover/ui/views/settings_page.dart';
 import 'package:Discover/ui/views/tracks_page.dart';
 import 'package:Discover/ui/widgets/custom_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:theme_provider/theme_provider.dart';
 
 class NavigationView extends StatefulWidget {
   @override
@@ -13,7 +11,6 @@ class NavigationView extends StatefulWidget {
 }
 
 class _NavigationViewState extends State<NavigationView> {
-  final CustomTheme _customTheme = new CustomTheme();
   Widget _bodyWidget;
   int _selectedIndex = 0;
 
@@ -66,9 +63,6 @@ class _NavigationViewState extends State<NavigationView> {
 
   @override
   Widget build(BuildContext context) {
-    _customTheme.getStyleUI(
-      ThemeProvider.optionsOf<SystemUI>(context).ui,
-    );
     return Scaffold(
       extendBody: true,
       body: _bodyWidget,
