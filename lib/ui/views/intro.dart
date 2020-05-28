@@ -79,10 +79,6 @@ class _IntroViewState extends State<IntroView> {
     ];
   }
 
-  // body: IntroSlider(
-  //   slides: _slides,
-  //   isShowDotIndicator: false,
-  // ),
   @override
   Widget build(BuildContext context) {
     _customTheme.getStyleUI(
