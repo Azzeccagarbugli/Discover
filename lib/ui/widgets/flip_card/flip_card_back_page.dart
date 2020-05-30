@@ -4,6 +4,8 @@ import 'package:Discover/ui/widgets/effects/glowicon.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_circular_text/circular_text.dart';
+import 'package:flutter_circular_text/circular_text/widget.dart';
 import 'package:hive/hive.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -62,103 +64,59 @@ class _BackFlipCardState extends State<BackFlipCard> {
               shape: BoxShape.circle,
               boxShadow: Neumorphism.boxShadow(context),
             ),
-            child: Center(
-              child: ListTile(
-                isThreeLine: true,
-                leading: SpringButton(
-                  SpringButtonType.OnlyScale,
-                  Container(
-                    decoration: new BoxDecoration(
-                      color: ThemeProvider.themeOf(context)
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularText(
+                children: [
+                  TextItem(
+                    text: Text(
+                      "RECORD".toUpperCase(),
+                      style: ThemeProvider.themeOf(context)
                           .data
-                          .scaffoldBackgroundColor,
-                      shape: BoxShape.circle,
-                      boxShadow: this.widget._isRecording
-                          ? Neumorphism.boxShadow(context)
-                          : [
-                              BoxShadow(
-                                color: Colors.transparent,
-                              )
-                            ],
+                          .primaryTextTheme
+                          .headline6
+                          .copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      child: Container(
-                        height: 42,
-                        width: 42,
-                        child: !this.widget._isRecording
-                            ? FlareActor(
-                                "assets/flares/recording.flr",
-                                fit: BoxFit.scaleDown,
-                                color: Colors.grey[400],
-                              )
-                            : FlareActor(
-                                "assets/flares/recording.flr",
-                                fit: BoxFit.scaleDown,
-                                color: _isSaving
-                                    ? Colors.red[600]
-                                    : Colors.green[400],
-                                animation: "record",
-                              ),
-                      ),
+                    space: 12,
+                    startAngle: 0,
+                    startAngleAlignment: StartAngleAlignment.center,
+                    direction: CircularTextDirection.clockwise,
+                  ),
+                  TextItem(
+                    text: Text(
+                      "RECORD".toUpperCase(),
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .primaryTextTheme
+                          .headline6
+                          .copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
+                    space: 12,
+                    startAngle: 120,
+                    startAngleAlignment: StartAngleAlignment.center,
+                    direction: CircularTextDirection.clockwise,
                   ),
-                  onTap: () {
-                    setState(() {
-                      _isSaving = !_isSaving;
-
-                      Track _trk = new Track(
-                        date: DateTime.now(),
-                        sound: _values,
-                        isSaved: false,
-                      );
-
-                      if (_values.isNotEmpty) _trackBox.add(_trk);
-                    });
-                  },
-                  useCache: false,
-                ),
-                title: Text(
-                  "RECORD",
-                  style: ThemeProvider.themeOf(context)
-                      .data
-                      .primaryTextTheme
-                      .headline6
-                      .copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 4,
+                  TextItem(
+                    text: Text(
+                      "RECORD".toUpperCase(),
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .primaryTextTheme
+                          .headline6
+                          .copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    space: 12,
+                    startAngle: -120,
+                    startAngleAlignment: StartAngleAlignment.center,
+                    direction: CircularTextDirection.clockwise,
                   ),
-                  child: Text(
-                    widget._isRecording
-                        ? (!_isSaving
-                            ? "Tap to save and store the current session of sounds"
-                            : "Tap to stop saving the current session of sounds")
-                        : "Start to feel the sound around you, tap the mic on the other side",
-                    style: ThemeProvider.themeOf(context)
-                        .data
-                        .primaryTextTheme
-                        .bodyText1,
-                    maxLines: 3,
-                    overflow: TextOverflow.fade,
-                  ),
-                ),
-                trailing: this.widget._isRecording
-                    ? (this._isSaving
-                        ? GlowIconRecording(color: Colors.red[600])
-                        : GlowIconRecording(color: Colors.green[400]))
-                    : Icon(
-                        Icons.brightness_1,
-                        color: Colors.grey[400],
-                        size: 12,
-                      ),
+                ],
               ),
             ),
           ),
@@ -167,3 +125,101 @@ class _BackFlipCardState extends State<BackFlipCard> {
     );
   }
 }
+
+// ListTile(
+//   isThreeLine: true,
+//   leading: SpringButton(
+//     SpringButtonType.OnlyScale,
+//     Container(
+//       decoration: new BoxDecoration(
+//         color: ThemeProvider.themeOf(context)
+//             .data
+//             .scaffoldBackgroundColor,
+//         shape: BoxShape.circle,
+//         boxShadow: this.widget._isRecording
+//             ? Neumorphism.boxShadow(context)
+//             : [
+//                 BoxShadow(
+//                   color: Colors.transparent,
+//                 )
+//               ],
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(
+//           horizontal: 12,
+//           vertical: 8,
+//         ),
+//         child: Container(
+//           height: 42,
+//           width: 42,
+//           child: !this.widget._isRecording
+//               ? FlareActor(
+//                   "assets/flares/recording.flr",
+//                   fit: BoxFit.scaleDown,
+//                   color: Colors.grey[400],
+//                 )
+//               : FlareActor(
+//                   "assets/flares/recording.flr",
+//                   fit: BoxFit.scaleDown,
+//                   color: _isSaving
+//                       ? Colors.red[600]
+//                       : Colors.green[400],
+//                   animation: "record",
+//                 ),
+//         ),
+//       ),
+//     ),
+//     onTap: () {
+//       setState(() {
+//         _isSaving = !_isSaving;
+
+//         Track _trk = new Track(
+//           date: DateTime.now(),
+//           sound: _values,
+//           isSaved: false,
+//         );
+
+//         if (_values.isNotEmpty) _trackBox.add(_trk);
+//       });
+//     },
+//     useCache: false,
+//   ),
+//   title: Text(
+//     "RECORD",
+//     style: ThemeProvider.themeOf(context)
+//         .data
+//         .primaryTextTheme
+//         .headline6
+//         .copyWith(
+//           fontWeight: FontWeight.bold,
+//           fontSize: 24,
+//         ),
+//   ),
+//   subtitle: Padding(
+//     padding: const EdgeInsets.only(
+//       top: 4,
+//     ),
+//     child: Text(
+//       widget._isRecording
+//           ? (!_isSaving
+//               ? "Tap to save and store the current session of sounds"
+//               : "Tap to stop saving the current session of sounds")
+//           : "Start to feel the sound around you, tap the mic on the other side",
+//       style: ThemeProvider.themeOf(context)
+//           .data
+//           .primaryTextTheme
+//           .bodyText1,
+//       maxLines: 3,
+//       overflow: TextOverflow.fade,
+//     ),
+//   ),
+//   trailing: this.widget._isRecording
+//       ? (this._isSaving
+//           ? GlowIconRecording(color: Colors.red[600])
+//           : GlowIconRecording(color: Colors.green[400]))
+//       : Icon(
+//           Icons.brightness_1,
+//           color: Colors.grey[400],
+//           size: 12,
+//         ),
+// ),

@@ -30,6 +30,7 @@ dependencies:
   permission_handler: ^5.0.0+hotfix.6
   listview_utils: ^0.1.6+1
   shared_preferences: ^0.5.7+3
+  flutter_circular_text: ^0.3.0
 
 dev_dependencies:
   hive_generator: ^0.7.0+2
