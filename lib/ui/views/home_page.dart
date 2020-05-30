@@ -138,18 +138,6 @@ class _HomepageViewState extends State<HomepageView>
     );
   }
 
-  Color _colorDB(double val) {
-    if (val > 0 && val < 20) {
-      return Colors.green[300];
-    } else if (val > 20 && val < 60) {
-      return Colors.green[400];
-    } else if (val > 60 && val < 80) {
-      return Colors.red[600];
-    } else {
-      return Colors.red[800];
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_isRecording) {
@@ -189,15 +177,17 @@ class _HomepageViewState extends State<HomepageView>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      AnimatedContainer(
-                        margin: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: new BoxDecoration(
-                          color: _colorDB(_noiseDB),
-                          shape: BoxShape.circle,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
                         ),
-                        duration: Duration(milliseconds: 600),
-                        height: 10,
-                        width: 10,
+                        child: Icon(
+                          Icons.surround_sound,
+                          size: 24,
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .textSelectionColor,
+                        ),
                       ),
                       Text(
                         "Level of decibel around you: ",

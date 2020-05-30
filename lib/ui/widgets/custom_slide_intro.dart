@@ -1,3 +1,4 @@
+import 'package:Discover/ui/views/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -142,29 +143,53 @@ class _BottomButtonIntroState extends State<BottomButtonIntro> {
           case ConnectionState.waiting:
             return Container();
           default:
-            return SpringButton(
-              SpringButtonType.OnlyScale,
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 62,
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 42,
-                  vertical: 32,
+            if (widget.index == 4) {
+              return GestureDetector(
+                onTap: () {
+                  controllerLogic(widget.index, snapshot.data);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 62,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 42,
+                    vertical: 32,
+                  ),
+                  decoration: buildBoxDecoration(
+                    context,
+                    snapshot.data,
+                  ),
+                  child: buildWidgetChild(
+                    context,
+                    snapshot.data,
+                  ),
                 ),
-                decoration: buildBoxDecoration(
-                  context,
-                  snapshot.data,
+              );
+            } else {
+              return SpringButton(
+                SpringButtonType.OnlyScale,
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 62,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 42,
+                    vertical: 32,
+                  ),
+                  decoration: buildBoxDecoration(
+                    context,
+                    snapshot.data,
+                  ),
+                  child: buildWidgetChild(
+                    context,
+                    snapshot.data,
+                  ),
                 ),
-                child: buildWidgetChild(
-                  context,
-                  snapshot.data,
-                ),
-              ),
-              onTap: () {
-                controllerLogic(widget.index, snapshot.data);
-              },
-              useCache: false,
-            );
+                onTap: () {
+                  controllerLogic(widget.index, snapshot.data);
+                },
+                useCache: false,
+              );
+            }
         }
       },
     );
@@ -178,6 +203,14 @@ class _BottomButtonIntroState extends State<BottomButtonIntro> {
       setState(() {
         _future = Permission.microphone.isGranted;
       });
+    }
+
+    if (index == 4 && permission) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ThemeConsumer(child: NavigationView())),
+      );
     }
   }
 

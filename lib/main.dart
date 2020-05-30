@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 void main() async {
@@ -33,13 +34,48 @@ class Discover extends StatelessWidget {
         _customTheme.getDark(),
         _customTheme.getLight(),
       ],
-      // saveThemesOnChange: true,
-      // loadThemeOnInit: true,
+      saveThemesOnChange: true,
+      loadThemeOnInit: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: ThemeConsumer(
-          // child: NavigationView(),
-          child: IntroView(),
+          child: FutureBuilder(
+            future: SharedPreferences.getInstance(),
+            builder: (BuildContext context,
+                AsyncSnapshot<SharedPreferences> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return LoadingScreen();
+                default:
+                  return snapshot.data.getBool("welcome") != null
+                      ? NavigationView()
+                      : IntroView();
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LoadingScreen extends StatelessWidget {
+  const LoadingScreen({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor:
+          ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
+      body: Center(
+        child: CircularProgressIndicator(
+          backgroundColor: ThemeProvider.themeOf(context).data.primaryColor,
+          valueColor: AlwaysStoppedAnimation<Color>(
+            ThemeProvider.themeOf(context).data.textSelectionColor,
+          ),
         ),
       ),
     );

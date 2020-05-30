@@ -3,6 +3,7 @@ import 'package:Discover/ui/widgets/custom_slide_intro.dart';
 import 'package:Discover/ui/widgets/effects/remove_glow_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:theme_provider/theme_provider.dart';
 
@@ -14,6 +15,17 @@ class IntroView extends StatefulWidget {
 class _IntroViewState extends State<IntroView> {
   final CustomTheme _customTheme = new CustomTheme();
   final SwiperController _controller = new SwiperController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  void loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("welcome", true);
+  }
 
   List<CustomSlideIntro> _listSlides(BuildContext context, int index) {
     return [
