@@ -179,7 +179,7 @@ class _HomepageViewState extends State<HomepageView>
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
+                          horizontal: 10,
                         ),
                         child: Icon(
                           Icons.surround_sound,

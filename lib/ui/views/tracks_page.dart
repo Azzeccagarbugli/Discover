@@ -101,6 +101,9 @@ class _TracksViewState extends State<TracksView> {
             child: CustomListView(
               key: _myList,
               disableRefresh: true,
+              footer: SizedBox(
+                height: 32,
+              ),
               separatorBuilder: (_, index) => Divider(),
               itemCount: tracks.keys.cast<int>().toList().length,
               shrinkWrap: true,
