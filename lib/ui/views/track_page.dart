@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/bar_graph.dart';
 import 'package:Discover/ui/widgets/bar_line.dart';
@@ -7,14 +8,18 @@ import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
+import 'package:hive/hive.dart';
+import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class CurrentTrackView extends StatefulWidget {
   final Track track;
+  final int indexKey;
 
   const CurrentTrackView({
     Key key,
-    @required this.track,
+    this.track,
+    this.indexKey,
   }) : super(key: key);
 
   @override
@@ -43,19 +48,42 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
               padding: const EdgeInsets.only(
                 top: 38,
               ),
-              child: Container(
-                height: 42,
-                width: 42,
-                decoration: new BoxDecoration(
-                  color: ThemeProvider.themeOf(context)
-                      .data
-                      .scaffoldBackgroundColor,
-                  shape: BoxShape.circle,
-                  boxShadow: Neumorphism.boxShadow(context),
+              child: SpringButton(
+                SpringButtonType.OnlyScale,
+                Container(
+                  height: 42,
+                  width: 42,
+                  decoration: new BoxDecoration(
+                    color: ThemeProvider.themeOf(context)
+                        .data
+                        .scaffoldBackgroundColor,
+                    shape: BoxShape.circle,
+                    boxShadow: Neumorphism.boxShadow(context),
+                  ),
+                  child: Icon(
+                    widget.track.isSaved
+                        ? (Icons.favorite)
+                        : (Icons.favorite_border),
+                    color: ThemeProvider.themeOf(context).id == "light_theme"
+                        ? Colors.red[600]
+                        : Colors.white,
+                  ),
                 ),
-                child: Icon(
-                  Icons.favorite_border,
-                ),
+                onTap: () {
+                  Hive.box<Track>(Discover.trackBoxName).put(
+                    widget.indexKey,
+                    new Track(
+                      sound: widget.track.sound,
+                      date: widget.track.date,
+                      isSaved: !widget.track.isSaved,
+                    ),
+                  );
+
+                  print(Hive.box<Track>(Discover.trackBoxName)
+                      .getAt(widget.indexKey)
+                      .date);
+                },
+                useCache: false,
               ),
             ),
             labelType: NavigationRailLabelType.all,

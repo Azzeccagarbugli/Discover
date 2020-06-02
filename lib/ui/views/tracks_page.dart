@@ -263,6 +263,7 @@ class _TracksViewState extends State<TracksView> {
                   ],
                   child: TrackItemList(
                     trk: trk,
+                    keyIndex: key,
                   ),
                 );
               },

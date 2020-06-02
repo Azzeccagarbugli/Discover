@@ -10,10 +10,12 @@ import 'effects/neumorphism.dart';
 class TrackItemList extends StatelessWidget {
   const TrackItemList({
     Key key,
-    @required this.trk,
+    this.trk,
+    this.keyIndex,
   }) : super(key: key);
 
   final Track trk;
+  final int keyIndex;
 
   static int diffInDays(DateTime date1, DateTime date2) {
     return ((date1.difference(date2) -
@@ -77,6 +79,7 @@ class TrackItemList extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => CurrentTrackView(
                 track: trk,
+                indexKey: keyIndex,
               ),
             ),
           );
