@@ -30,9 +30,8 @@ class BuildTileHeaderTracks extends StatelessWidget {
         Align(
           alignment: Alignment.bottomCenter,
           child: ClipRRect(
-            borderRadius: const BorderRadius.horizontal(
-              left: Radius.circular(25),
-              right: Radius.circular(25),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(25),
             ),
             child: ClipPath(
               clipper: WaveClipperTwo(reverse: true),

@@ -1,13 +1,14 @@
 import 'dart:math';
 
 import 'package:Discover/main.dart';
+import 'package:Discover/models/level.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/bar_graph.dart';
 import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:spring_button/spring_button.dart';
@@ -16,12 +17,10 @@ import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
 class CurrentTrackView extends StatefulWidget {
-  final Track track;
   final int indexKey;
 
   const CurrentTrackView({
     Key key,
-    this.track,
     this.indexKey,
   }) : super(key: key);
 
@@ -81,13 +80,13 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
                       onTap: () {
                         Track nTrack = tracks.get(widget.indexKey).isSaved
                             ? new Track(
-                                sound: widget.track.sound,
-                                date: widget.track.date,
+                                sound: tracks.get(widget.indexKey).sound,
+                                date: tracks.get(widget.indexKey).date,
                                 isSaved: false,
                               )
                             : new Track(
-                                sound: widget.track.sound,
-                                date: widget.track.date,
+                                sound: tracks.get(widget.indexKey).sound,
+                                date: tracks.get(widget.indexKey).date,
                                 isSaved: true,
                               );
 
@@ -149,9 +148,10 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        CardTrackInfo(),
-                        CardTrackInfo(),
-                        CardTrackInfo(),
+                        CardTrackInfo(
+                          level: Level.HIGH,
+                          track: tracks.get(widget.indexKey),
+                        ),
                       ],
                     ),
                   ),
@@ -164,8 +164,13 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
 }
 
 class CardTrackInfo extends StatelessWidget {
+  final Track track;
+  final Level level;
+
   const CardTrackInfo({
     Key key,
+    this.track,
+    this.level,
   }) : super(key: key);
 
   BorderRadius borderRadius() {
@@ -174,6 +179,19 @@ class CardTrackInfo extends StatelessWidget {
         25.0,
       ),
     );
+  }
+
+  double currentValue(Track track, Level level) {
+    switch (level) {
+      case Level.HIGH:
+        return track.sound.reduce(max);
+      case Level.MIN:
+        return track.sound.reduce(min);
+      case Level.AVG:
+        return track.sound.reduce((a, b) => (a + b) / track.sound.length);
+      default:
+        return null;
+    }
   }
 
   @override
@@ -211,9 +229,28 @@ class CardTrackInfo extends StatelessWidget {
                   double.infinity,
                 ),
               ),
-              Center(
-                child: Container(
-                  child: Text("data"),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                left: 0,
+                child: ClipPath(
+                  clipper: WaveClipperTwo(reverse: true),
+                  child: Container(
+                    height: 76,
+                    color: Colors.orange,
+                    child: Text(
+                      currentValue(track, level).toStringAsFixed(0),
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .primaryTextTheme
+                          .headline6
+                          .copyWith(
+                            color: Colors.white,
+                            fontSize: MediaQuery.of(context).size.height / 4,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
                 ),
               ),
             ],

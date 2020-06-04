@@ -122,15 +122,13 @@ class _TracksViewState extends State<TracksView> {
                                     .data
                                     .scaffoldBackgroundColor,
                                 boxShadow: Neumorphism.boxShadow(context),
-                                borderRadius: const BorderRadius.horizontal(
-                                  left: Radius.circular(25),
-                                  right: Radius.circular(25),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(25),
                                 ),
                               ),
                               child: ClipRRect(
-                                borderRadius: const BorderRadius.horizontal(
-                                  left: Radius.circular(25),
-                                  right: Radius.circular(25),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(25),
                                 ),
                                 child: _levels[index],
                               ),

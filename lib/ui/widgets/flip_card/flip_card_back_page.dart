@@ -2,7 +2,6 @@ import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/circular_text.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_text/circular_text.dart';
 import 'package:hive/hive.dart';
@@ -128,31 +127,29 @@ class _BackFlipCardState extends State<BackFlipCard>
           child: SpringButton(
             SpringButtonType.OnlyScale,
             Container(
+              padding: const EdgeInsets.all(34),
               decoration: new BoxDecoration(
                 color:
                     ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
                 shape: BoxShape.circle,
-                boxShadow: this.widget._isRecording
-                    ? Neumorphism.boxShadow(context)
-                    : [
-                        BoxShadow(
-                          color: Colors.transparent,
-                        )
-                      ],
+                boxShadow: Neumorphism.boxShadow(context),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Container(
-                  height: 96,
-                  width: 96,
-                  child: AnimatedIcon(
-                    icon: AnimatedIcons.pause_play,
-                    progress: _iconController,
-                    color: Colors.red,
-                    size: 96,
-                  ),
-                ),
-              ),
+              child: !widget._isRecording
+                  ? Icon(
+                      Icons.do_not_disturb_on,
+                      color: Colors.red[600],
+                      size: 96,
+                    )
+                  : AnimatedIcon(
+                      icon: AnimatedIcons.play_pause,
+                      progress: _iconController,
+                      color: _isSaving
+                          ? Colors.red[400]
+                          : ThemeProvider.themeOf(context).id == "light_theme"
+                              ? Colors.grey[400]
+                              : Colors.grey[850],
+                      size: 96,
+                    ),
             ),
             onTap: () {
               setState(() {

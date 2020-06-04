@@ -1,6 +1,5 @@
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/views/track_page.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -78,7 +77,6 @@ class TrackItemList extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => CurrentTrackView(
-                track: trk,
                 indexKey: keyIndex,
               ),
             ),
