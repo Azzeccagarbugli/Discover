@@ -40,7 +40,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
             return Row(
               children: <Widget>[
                 NavigationRail(
-                  elevation: 8,
+                  elevation: 12,
                   selectedIndex: _selectedIndex,
                   onDestinationSelected: (int index) {
                     setState(() {
@@ -139,27 +139,72 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
                     ),
                   ],
                 ),
-                Expanded(
-                  child: Container(
-                    color: ThemeProvider.themeOf(context).id == "light_theme"
-                        ? Colors.white30
-                        : Colors.black87,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        CardTrackInfo(
-                          level: Level.HIGH,
-                          track: tracks.get(widget.indexKey),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
+                buildValueNav(context, tracks, _selectedIndex),
               ],
             );
           }),
     );
+  }
+
+  Widget buildValueNav(BuildContext context, Box<Track> tracks, int i) {
+    switch (i) {
+      case 0:
+        return Expanded(
+          child: Container(
+            color: ThemeProvider.themeOf(context).id == "light_theme"
+                ? Colors.white30
+                : Colors.black87,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                CardTrackInfo(
+                  level: Level.HIGH,
+                  track: tracks.get(widget.indexKey),
+                ),
+                CardTrackInfo(
+                  level: Level.AVG,
+                  track: tracks.get(widget.indexKey),
+                ),
+                CardTrackInfo(
+                  level: Level.MIN,
+                  track: tracks.get(widget.indexKey),
+                ),
+              ],
+            ),
+          ),
+        );
+      case 1:
+        return Expanded(
+          child: Container(
+            height: double.infinity,
+            color: ThemeProvider.themeOf(context).id == "light_theme"
+                ? Colors.white30
+                : Colors.black87,
+            child: Row(
+              children: <Widget>[
+                // Container(
+                //   color: ThemeProvider.themeOf(context)
+                //       .data
+                //       .scaffoldBackgroundColor,
+                //   width: 30,
+                // ),
+                Expanded(
+                  child: Container(
+                    height: double.infinity,
+                    child: BuildLineGraph(
+                      trk: tracks.get(widget.indexKey),
+                      enableTouch: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      default:
+        return null;
+    }
   }
 }
 
@@ -188,7 +233,99 @@ class CardTrackInfo extends StatelessWidget {
       case Level.MIN:
         return track.sound.reduce(min);
       case Level.AVG:
-        return track.sound.reduce((a, b) => (a + b) / track.sound.length);
+        return track.sound.reduce((a, b) => a + b) / track.sound.length;
+      default:
+        return null;
+    }
+  }
+
+  List<List<Color>> gradients(Level level, BuildContext context) {
+    switch (level) {
+      case Level.HIGH:
+        return [
+          [Colors.red, Color(0xEEF44336)],
+          [Colors.red[800], Color(0x77E57373)],
+          [Colors.orange, Color(0x66FF9800)],
+          [Colors.redAccent[400], Colors.redAccent]
+        ];
+      case Level.MIN:
+        return [
+          [Colors.green[200], Colors.green[300]],
+          [Colors.green[800], Colors.green[700]],
+          [Colors.green[700], Colors.green[900]],
+          [Colors.greenAccent, Colors.greenAccent[700]],
+        ];
+      case Level.AVG:
+        return [
+          [
+            ThemeProvider.themeOf(context).data.accentColor,
+            ThemeProvider.themeOf(context).data.accentColor,
+          ],
+          [
+            ThemeProvider.themeOf(context).data.primaryColor.withOpacity(0.2),
+            ThemeProvider.themeOf(context).data.primaryColor.withOpacity(0.2),
+          ],
+          [
+            ThemeProvider.themeOf(context).data.textSelectionColor,
+            ThemeProvider.themeOf(context).data.textSelectionColor
+          ],
+          [
+            ThemeProvider.themeOf(context).data.accentColor.withOpacity(0.2),
+            ThemeProvider.themeOf(context).data.accentColor.withOpacity(0.2),
+          ]
+        ];
+      default:
+        return null;
+    }
+  }
+
+  List<int> durationLevel(Level level) {
+    switch (level) {
+      case Level.HIGH:
+        return [35000, 19440, 10800, 6000];
+      case Level.MIN:
+        return [20000, 17200, 5900, 4000];
+      case Level.AVG:
+        return [14000, 11440, 8800, 18800];
+      default:
+        return null;
+    }
+  }
+
+  Color colorLevel(Level level, BuildContext context) {
+    switch (level) {
+      case Level.HIGH:
+        return Colors.red[600];
+      case Level.MIN:
+        return Colors.green;
+      case Level.AVG:
+        return ThemeProvider.themeOf(context).data.accentColor;
+      default:
+        return null;
+    }
+  }
+
+  IconData iconsLevel(Level level) {
+    switch (level) {
+      case Level.HIGH:
+        return Icons.trending_up;
+      case Level.MIN:
+        return Icons.trending_down;
+      case Level.AVG:
+        return Icons.trending_flat;
+      default:
+        return null;
+    }
+  }
+
+  String msgLevel(Level level) {
+    switch (level) {
+      case Level.HIGH:
+        return "MAX";
+      case Level.MIN:
+        return "MIN";
+      case Level.AVG:
+        return "AVG";
       default:
         return null;
     }
@@ -212,13 +349,8 @@ class CardTrackInfo extends StatelessWidget {
             children: <Widget>[
               WaveWidget(
                 config: CustomConfig(
-                  gradients: [
-                    [Colors.red, Color(0xEEF44336)],
-                    [Colors.red[800], Color(0x77E57373)],
-                    [Colors.orange, Color(0x66FF9800)],
-                    [Colors.yellow, Color(0x55FFEB3B)]
-                  ],
-                  durations: [35000, 19440, 10800, 6000],
+                  gradients: gradients(level, context),
+                  durations: durationLevel(level),
                   heightPercentages: [0.10, 0.23, 0.25, 0.30],
                   gradientBegin: Alignment.bottomLeft,
                   gradientEnd: Alignment.topRight,
@@ -236,23 +368,70 @@ class CardTrackInfo extends StatelessWidget {
                 child: ClipPath(
                   clipper: WaveClipperTwo(reverse: true),
                   child: Container(
-                    height: 76,
-                    color: Colors.orange,
-                    child: Text(
-                      currentValue(track, level).toStringAsFixed(0),
-                      style: ThemeProvider.themeOf(context)
-                          .data
-                          .primaryTextTheme
-                          .headline6
-                          .copyWith(
-                            color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height / 4,
-                            fontWeight: FontWeight.bold,
+                    height: 96,
+                    color: colorLevel(level, context),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            currentValue(track, level).toStringAsFixed(0),
+                            style: ThemeProvider.themeOf(context)
+                                .data
+                                .primaryTextTheme
+                                .headline6
+                                .copyWith(
+                                  color: Colors.white,
+                                  fontSize: 62,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
+                          Text(
+                            "db",
+                            style: ThemeProvider.themeOf(context)
+                                .data
+                                .primaryTextTheme
+                                .headline6
+                                .copyWith(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
+              Positioned(
+                right: 22,
+                bottom: 22,
+                child: Chip(
+                  elevation: 8,
+                  backgroundColor: ThemeProvider.themeOf(context)
+                      .data
+                      .scaffoldBackgroundColor,
+                  avatar: CircleAvatar(
+                    backgroundColor: colorLevel(level, context),
+                    child: Icon(
+                      iconsLevel(level),
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ),
+                  label: Text(
+                    msgLevel(level),
+                    style: ThemeProvider.themeOf(context)
+                        .data
+                        .primaryTextTheme
+                        .headline6
+                        .copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -260,227 +439,3 @@ class CardTrackInfo extends StatelessWidget {
     );
   }
 }
-
-// class CardWithGraph extends StatelessWidget {
-//   const CardWithGraph({
-//     Key key,
-//     @required this.widget,
-//   }) : super(key: key);
-
-//   final CurrentTrackView widget;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Stack(
-//         children: <Widget>[
-//           Container(
-//             decoration: BoxDecoration(
-//               color:
-//                   ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
-//               borderRadius: BorderRadius.vertical(
-//                 top: Radius.circular(24.0),
-//               ),
-//               boxShadow: Neumorphism.boxShadow(context),
-//             ),
-//           ),
-//           Container(
-//             color: Colors.transparent,
-//             child: Column(
-//               mainAxisSize: MainAxisSize.max,
-//               children: <Widget>[
-//                 Expanded(
-//                   flex: 2,
-//                   child: CurvedListItem(
-//                     title: 'MAX',
-//                     color: Colors.red,
-//                     nextColor: Colors.green,
-//                     isFirst: true,
-//                   ),
-//                 ),
-//                 Expanded(
-//                   flex: 2,
-//                   child: CurvedListItem(
-//                     title: 'MIN',
-//                     color: Colors.green,
-//                     nextColor: Colors.amber,
-//                   ),
-//                 ),
-//                 Expanded(
-//                   flex: 2,
-//                   child: CurvedListItem(
-//                     title: 'AVG',
-//                     color: Colors.amber,
-//                     nextColor: ThemeProvider.themeOf(context)
-//                         .data
-//                         .scaffoldBackgroundColor,
-//                   ),
-//                 ),
-//                 Expanded(
-//                   child: RaisedButton(
-//                     onPressed: () {},
-//                     color: ThemeProvider.themeOf(context)
-//                         .data
-//                         .scaffoldBackgroundColor
-//                         .withAlpha(32),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: <Widget>[
-//                         Text(
-//                           'Continue',
-//                           style: TextStyle(
-//                             fontSize: 20,
-//                             fontWeight: FontWeight.w700,
-//                             color: Colors.white,
-//                           ),
-//                         ),
-//                         Icon(
-//                           Icons.arrow_forward,
-//                           color: Colors.white,
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           FractionalTranslation(
-//             translation: Offset(0.0, -0.45),
-//             child: Align(
-//               alignment: FractionalOffset(0.5, 0.45),
-//               child: Container(
-//                 margin: const EdgeInsets.symmetric(
-//                   horizontal: 104,
-//                 ),
-//                 decoration: BoxDecoration(
-//                   color: ThemeProvider.themeOf(context).id == "light_theme"
-//                       ? Colors.white
-//                       : Colors.grey[900],
-//                   shape: BoxShape.circle,
-//                   boxShadow: Neumorphism.boxShadow(context),
-//                 ),
-//                 child: CenterMedal(
-//                   widget: widget,
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class CenterMedal extends StatelessWidget {
-//   const CenterMedal({
-//     Key key,
-//     @required this.widget,
-//   }) : super(key: key);
-
-//   final CurrentTrackView widget;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Stack(
-//       children: <Widget>[
-//         Center(
-//           child: AnimatedCircularChart(
-//             size: Size(220, 220),
-//             initialChartData: <CircularStackEntry>[
-//               BarGraph.buildGraphMaxNoise(
-//                   widget.track.sound.reduce(max), context),
-//               BarGraph.buildGraphMinNoise(
-//                   widget.track.sound.reduce(min), context),
-//               BarGraph.buildGraphActualNoise(
-//                   (widget.track.sound.reduce((a, b) => a + b) /
-//                       widget.track.sound.length),
-//                   context),
-//             ],
-//             chartType: CircularChartType.Radial,
-//             edgeStyle: SegmentEdgeStyle.round,
-//             percentageValues: true,
-//             holeRadius: 18,
-//             duration: Duration(
-//               milliseconds: 700,
-//             ),
-//           ),
-//         ),
-//         Center(
-//           child: Container(
-//             margin: const EdgeInsets.all(72),
-//             decoration: BoxDecoration(
-//               color: ThemeProvider.themeOf(context).id == "light_theme"
-//                   ? Colors.white
-//                   : Colors.grey[900],
-//               shape: BoxShape.circle,
-//               boxShadow: Neumorphism.boxShadow(context),
-//             ),
-//             child: Padding(
-//               padding: const EdgeInsets.all(8.0),
-//               child: FlareActor(
-//                 "assets/flares/recording.flr",
-//                 fit: BoxFit.scaleDown,
-//                 color: ThemeProvider.themeOf(context).data.accentColor,
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// class CurvedListItem extends StatelessWidget {
-//   const CurvedListItem({
-//     this.title,
-//     this.time,
-//     this.icon,
-//     this.people,
-//     this.color,
-//     this.nextColor,
-//     this.isFirst = false,
-//   });
-
-//   final String title;
-//   final String time;
-//   final String people;
-//   final IconData icon;
-//   final Color color;
-//   final Color nextColor;
-//   final bool isFirst;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ClipRRect(
-//       borderRadius: isFirst
-//           ? BorderRadius.only(
-//               topLeft: Radius.circular(24.0),
-//               topRight: Radius.circular(24.0),
-//             )
-//           : BorderRadius.zero,
-//       child: Container(
-//         width: double.infinity,
-//         child: Container(
-//           decoration: new BoxDecoration(
-//             borderRadius: const BorderRadius.only(
-//               bottomLeft: Radius.circular(32.0),
-//             ),
-//           ),
-//           child: Text(
-//             title,
-//             style: ThemeProvider.themeOf(context)
-//                 .data
-//                 .primaryTextTheme
-//                 .headline6
-//                 .copyWith(
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 130,
-//                   color: color,
-//                 ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

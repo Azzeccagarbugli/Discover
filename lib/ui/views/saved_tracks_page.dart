@@ -1,19 +1,12 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
-import 'package:Discover/ui/widgets/bar_line.dart';
-import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/effects/remove_glow_listview.dart';
 import 'package:Discover/ui/widgets/not_found.dart';
 import 'package:Discover/ui/widgets/saved_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class SavedTracksView extends StatefulWidget {

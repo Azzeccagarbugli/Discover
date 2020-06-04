@@ -70,9 +70,9 @@ class SavedItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       ValueBuilding(
-                        value: trk.sound.reduce(min),
-                        desc: "MIN",
-                        color: Colors.green,
+                        value: trk.sound.reduce(max),
+                        desc: "MAX",
+                        color: Colors.red[300],
                       ),
                       ValueBuilding(
                         value: trk.sound.reduce((a, b) => a + b) /
@@ -81,9 +81,9 @@ class SavedItem extends StatelessWidget {
                         color: ThemeProvider.themeOf(context).data.accentColor,
                       ),
                       ValueBuilding(
-                        value: trk.sound.reduce(max),
-                        desc: "MAX",
-                        color: Colors.red[300],
+                        value: trk.sound.reduce(min),
+                        desc: "MIN",
+                        color: Colors.green,
                       ),
                     ],
                   ),
