@@ -33,6 +33,7 @@ class _BackFlipCardState extends State<BackFlipCard>
 
   Box<Track> _trackBox;
 
+  AnimationController _iconController;
   AnimationController _rotationControllerFaster;
   AnimationController _rotationControllerSlower;
 
@@ -41,6 +42,12 @@ class _BackFlipCardState extends State<BackFlipCard>
     super.initState();
     _values = new List<double>();
     _trackBox = Hive.box<Track>(Discover.trackBoxName);
+    _iconController = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 800,
+      ),
+    );
     _rotationControllerFaster = AnimationController(
       duration: const Duration(
         seconds: 18,
@@ -59,6 +66,7 @@ class _BackFlipCardState extends State<BackFlipCard>
   void dispose() {
     _rotationControllerFaster.dispose();
     _rotationControllerSlower.dispose();
+    _iconController.dispose();
     super.dispose();
   }
 
@@ -137,31 +145,21 @@ class _BackFlipCardState extends State<BackFlipCard>
                 child: Container(
                   height: 96,
                   width: 96,
-                  child: !this.widget._isRecording
-                      ? FlareActor(
-                          "assets/flares/recording.flr",
-                          fit: BoxFit.scaleDown,
-                          color:
-                              ThemeProvider.themeOf(context).id == "light_theme"
-                                  ? Colors.grey[400]
-                                  : Colors.grey[800],
-                        )
-                      : FlareActor(
-                          "assets/flares/recording.flr",
-                          fit: BoxFit.scaleDown,
-                          color: !_isSaving
-                              ? ThemeProvider.themeOf(context).id ==
-                                      "light_theme"
-                                  ? Colors.grey[400]
-                                  : Colors.grey[800]
-                              : Colors.red[600],
-                          animation: "record",
-                        ),
+                  child: AnimatedIcon(
+                    icon: AnimatedIcons.pause_play,
+                    progress: _iconController,
+                    color: Colors.red,
+                    size: 96,
+                  ),
                 ),
               ),
             ),
             onTap: () {
               setState(() {
+                !_isSaving
+                    ? _iconController.forward()
+                    : _iconController.reverse();
+
                 _isSaving = !_isSaving;
 
                 Track _trk = new Track(

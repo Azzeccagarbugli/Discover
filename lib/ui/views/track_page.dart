@@ -9,8 +9,11 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:wave/config.dart';
+import 'package:wave/wave.dart';
 
 class CurrentTrackView extends StatefulWidget {
   final Track track;
@@ -32,110 +35,190 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: <Widget>[
-          NavigationRail(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-            backgroundColor:
-                ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
-            groupAlignment: 0.0,
-            leading: Padding(
-              padding: const EdgeInsets.only(
-                top: 38,
-              ),
-              child: SpringButton(
-                SpringButtonType.OnlyScale,
-                Container(
-                  height: 42,
-                  width: 42,
-                  decoration: new BoxDecoration(
-                    color: ThemeProvider.themeOf(context)
-                        .data
-                        .scaffoldBackgroundColor,
-                    shape: BoxShape.circle,
-                    boxShadow: Neumorphism.boxShadow(context),
-                  ),
-                  child: Icon(
-                    widget.track.isSaved
-                        ? (Icons.favorite)
-                        : (Icons.favorite_border),
-                    color: ThemeProvider.themeOf(context).id == "light_theme"
-                        ? Colors.red[600]
-                        : Colors.white,
-                  ),
-                ),
-                onTap: () {
-                  Hive.box<Track>(Discover.trackBoxName).put(
-                    widget.indexKey,
-                    new Track(
-                      sound: widget.track.sound,
-                      date: widget.track.date,
-                      isSaved: !widget.track.isSaved,
+      body: ValueListenableBuilder(
+          valueListenable: Hive.box<Track>(Discover.trackBoxName).listenable(),
+          builder: (context, Box<Track> tracks, _) {
+            return Row(
+              children: <Widget>[
+                NavigationRail(
+                  elevation: 8,
+                  selectedIndex: _selectedIndex,
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  backgroundColor: ThemeProvider.themeOf(context)
+                      .data
+                      .scaffoldBackgroundColor,
+                  groupAlignment: 0.0,
+                  leading: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 38,
                     ),
-                  );
+                    child: SpringButton(
+                      SpringButtonType.OnlyScale,
+                      Container(
+                        height: 42,
+                        width: 42,
+                        decoration: new BoxDecoration(
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .scaffoldBackgroundColor,
+                          shape: BoxShape.circle,
+                          boxShadow: Neumorphism.boxShadow(context),
+                        ),
+                        child: Icon(
+                          tracks.get(widget.indexKey).isSaved
+                              ? (Icons.favorite)
+                              : (Icons.favorite_border),
+                          color:
+                              ThemeProvider.themeOf(context).id == "light_theme"
+                                  ? Colors.red[600]
+                                  : Colors.white,
+                        ),
+                      ),
+                      onTap: () {
+                        Track nTrack = tracks.get(widget.indexKey).isSaved
+                            ? new Track(
+                                sound: widget.track.sound,
+                                date: widget.track.date,
+                                isSaved: false,
+                              )
+                            : new Track(
+                                sound: widget.track.sound,
+                                date: widget.track.date,
+                                isSaved: true,
+                              );
 
-                  print(Hive.box<Track>(Discover.trackBoxName)
-                      .getAt(widget.indexKey)
-                      .date);
-                },
-                useCache: false,
-              ),
-            ),
-            labelType: NavigationRailLabelType.all,
-            selectedLabelTextStyle: ThemeProvider.themeOf(context)
-                .data
-                .primaryTextTheme
-                .headline6
-                .copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.6,
-                ),
-            unselectedLabelTextStyle: ThemeProvider.themeOf(context)
-                .data
-                .primaryTextTheme
-                .headline6
-                .copyWith(
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 1.6,
-                ),
-            destinations: [
-              NavigationRailDestination(
-                icon: SizedBox.shrink(),
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  child: RotatedBox(
-                    quarterTurns: -1,
-                    child: Text(
-                      "Cards".toUpperCase(),
+                        tracks.put(widget.indexKey, nTrack);
+                      },
+                      useCache: false,
                     ),
                   ),
+                  labelType: NavigationRailLabelType.all,
+                  selectedLabelTextStyle: ThemeProvider.themeOf(context)
+                      .data
+                      .primaryTextTheme
+                      .headline6
+                      .copyWith(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.6,
+                      ),
+                  unselectedLabelTextStyle: ThemeProvider.themeOf(context)
+                      .data
+                      .primaryTextTheme
+                      .headline6
+                      .copyWith(
+                        fontWeight: FontWeight.w300,
+                        letterSpacing: 1.6,
+                      ),
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: SizedBox.shrink(),
+                      label: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: RotatedBox(
+                          quarterTurns: -1,
+                          child: Text(
+                            "Cards".toUpperCase(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    NavigationRailDestination(
+                      icon: SizedBox.shrink(),
+                      label: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: RotatedBox(
+                          quarterTurns: -1,
+                          child: Text(
+                            "Graph".toUpperCase(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              NavigationRailDestination(
-                icon: SizedBox.shrink(),
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  child: RotatedBox(
-                    quarterTurns: -1,
-                    child: Text(
-                      "Graph".toUpperCase(),
+                Expanded(
+                  child: Container(
+                    color: ThemeProvider.themeOf(context).id == "light_theme"
+                        ? Colors.white30
+                        : Colors.black87,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        CardTrackInfo(),
+                        CardTrackInfo(),
+                        CardTrackInfo(),
+                      ],
                     ),
                   ),
+                )
+              ],
+            );
+          }),
+    );
+  }
+}
+
+class CardTrackInfo extends StatelessWidget {
+  const CardTrackInfo({
+    Key key,
+  }) : super(key: key);
+
+  BorderRadius borderRadius() {
+    return BorderRadius.horizontal(
+      left: Radius.circular(
+        25.0,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 24),
+      child: Container(
+        decoration: new BoxDecoration(
+          color: ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
+          borderRadius: borderRadius(),
+          boxShadow: Neumorphism.boxShadow(context),
+          shape: BoxShape.rectangle,
+        ),
+        height: MediaQuery.of(context).size.height / 4,
+        child: ClipRRect(
+          borderRadius: borderRadius(),
+          child: Stack(
+            children: <Widget>[
+              WaveWidget(
+                config: CustomConfig(
+                  gradients: [
+                    [Colors.red, Color(0xEEF44336)],
+                    [Colors.red[800], Color(0x77E57373)],
+                    [Colors.orange, Color(0x66FF9800)],
+                    [Colors.yellow, Color(0x55FFEB3B)]
+                  ],
+                  durations: [35000, 19440, 10800, 6000],
+                  heightPercentages: [0.10, 0.23, 0.25, 0.30],
+                  gradientBegin: Alignment.bottomLeft,
+                  gradientEnd: Alignment.topRight,
+                ),
+                waveAmplitude: 0,
+                size: Size(
+                  double.infinity,
+                  double.infinity,
+                ),
+              ),
+              Center(
+                child: Container(
+                  child: Text("data"),
                 ),
               ),
             ],
           ),
-          Expanded(
-            child: Center(
-              child: Text('selectedIndex: $_selectedIndex'),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
