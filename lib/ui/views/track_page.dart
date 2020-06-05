@@ -3,11 +3,9 @@ import 'dart:math';
 import 'package:Discover/main.dart';
 import 'package:Discover/models/level.dart';
 import 'package:Discover/models/track.dart';
-import 'package:Discover/ui/widgets/bar_graph.dart';
 import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -183,12 +181,12 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
                 : Colors.black87,
             child: Row(
               children: <Widget>[
-                // Container(
-                //   color: ThemeProvider.themeOf(context)
-                //       .data
-                //       .scaffoldBackgroundColor,
-                //   width: 30,
-                // ),
+                Container(
+                  color: ThemeProvider.themeOf(context).id == "light_theme"
+                      ? Colors.white30
+                      : Colors.grey[850],
+                  width: 30,
+                ),
                 Expanded(
                   child: Container(
                     height: double.infinity,
