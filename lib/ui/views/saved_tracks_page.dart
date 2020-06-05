@@ -1,5 +1,6 @@
 import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
+import 'package:Discover/ui/views/track_page.dart';
 import 'package:Discover/ui/widgets/effects/remove_glow_listview.dart';
 import 'package:Discover/ui/widgets/not_found.dart';
 import 'package:Discover/ui/widgets/saved_item.dart';
@@ -52,8 +53,25 @@ class _SavedTracksViewState extends State<SavedTracksView> {
                     bottom: MediaQuery.of(context).size.height / 6,
                     top: 48,
                   ),
-                  child: SavedItem(
-                    trk: trk,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CurrentTrackView(
+                            indexKey: tracks.keys
+                                .cast<int>()
+                                .where((elem) => tracks.get(elem).isSaved)
+                                .toList()
+                                .reversed
+                                .toList()[index],
+                          ),
+                        ),
+                      );
+                    },
+                    child: SavedItem(
+                      trk: trk,
+                    ),
                   ),
                 );
               },

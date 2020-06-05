@@ -21,6 +21,7 @@ class CustomTheme {
       textSelectionColor: Colors.blue[800],
       scaffoldBackgroundColor: Colors.white,
       accentColor: Colors.blue[500],
+      buttonColor: Colors.red[600],
       primaryTextTheme: TextTheme(
         headline6: TextStyle(
           color: Colors.grey[800],
@@ -50,6 +51,7 @@ class CustomTheme {
       primaryColor: Colors.black45,
       scaffoldBackgroundColor: Colors.grey[900],
       accentColor: Colors.amber[400],
+      buttonColor: Colors.amber[800],
       primaryTextTheme: TextTheme(
         headline6: TextStyle(
           color: Colors.white,

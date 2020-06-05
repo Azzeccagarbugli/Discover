@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:Discover/main.dart';
 import 'package:Discover/models/level.dart';
 import 'package:Discover/models/track.dart';
+import 'package:Discover/ui/views/track_page.dart';
 import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/effects/remove_glow_listview.dart';
@@ -130,7 +131,21 @@ class _TracksViewState extends State<TracksView> {
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(25),
                                 ),
-                                child: _levels[index],
+                                child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              CurrentTrackView(
+                                            indexKey: tracks.keys
+                                                .cast<int>()
+                                                .toList()[index],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: _levels[index]),
                               ),
                             );
                           },
