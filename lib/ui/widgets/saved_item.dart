@@ -7,6 +7,8 @@ import 'package:Discover/ui/widgets/share_track.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -121,7 +123,10 @@ class SavedItem extends StatelessWidget {
                           .color,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () async {
+                    await generateResume(this.trk);
+                    OpenFile.open(await pathFile(this.trk));
+                  },
                 ),
               ],
             ),
