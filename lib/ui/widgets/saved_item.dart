@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
 
