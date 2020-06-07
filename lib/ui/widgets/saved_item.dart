@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/row_building_values.dart';
+import 'package:Discover/ui/widgets/share_track.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:intl/intl.dart';
+import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 import 'effects/neumorphism.dart';
@@ -98,20 +100,28 @@ class SavedItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Container(
-                  height: 52,
-                  width: 52,
-                  decoration: BoxDecoration(
-                    color: ThemeProvider.themeOf(context)
-                        .data
-                        .scaffoldBackgroundColor,
-                    shape: BoxShape.circle,
-                    boxShadow: Neumorphism.boxShadow(context),
+                SpringButton(
+                  SpringButtonType.OnlyScale,
+                  Container(
+                    height: 52,
+                    width: 52,
+                    decoration: BoxDecoration(
+                      color: ThemeProvider.themeOf(context)
+                          .data
+                          .scaffoldBackgroundColor,
+                      shape: BoxShape.circle,
+                      boxShadow: Neumorphism.boxShadow(context),
+                    ),
+                    child: Icon(
+                      Icons.share,
+                      color: ThemeProvider.themeOf(context)
+                          .data
+                          .primaryTextTheme
+                          .headline6
+                          .color,
+                    ),
                   ),
-                  child: Icon(
-                    Icons.share,
-                    color: ThemeProvider.themeOf(context).data.accentColor,
-                  ),
+                  onTap: () {},
                 ),
               ],
             ),

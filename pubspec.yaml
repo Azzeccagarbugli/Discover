@@ -30,6 +30,7 @@ dependencies:
   shared_preferences: ^0.5.7+3
   flutter_circular_text: ^0.3.0
   wave: ^0.0.8
+  pdf: ^1.8.1
 
 dev_dependencies:
   hive_generator: ^0.7.0+2

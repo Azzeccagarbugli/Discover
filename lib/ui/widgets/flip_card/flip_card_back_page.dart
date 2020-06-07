@@ -147,7 +147,7 @@ class _BackFlipCardState extends State<BackFlipCard>
                           ? Colors.red[400]
                           : ThemeProvider.themeOf(context).id == "light_theme"
                               ? Colors.grey[400]
-                              : Colors.grey[850],
+                              : Colors.white,
                       size: 96,
                     ),
             ),
