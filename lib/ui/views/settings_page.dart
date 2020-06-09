@@ -1,5 +1,6 @@
 import 'package:Discover/main.dart';
 import 'package:Discover/models/track.dart';
+import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/tile_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:Discover/ui/widgets/title_page.dart';
@@ -201,15 +202,47 @@ class _SettingsViewState extends State<SettingsView> {
                                   Radius.circular(25.0),
                                 ),
                               ),
-                              title: Text(
-                                "Erase all the data?",
-                                style: ThemeProvider.themeOf(context)
-                                    .data
-                                    .primaryTextTheme
-                                    .headline6
-                                    .copyWith(
-                                      fontWeight: FontWeight.bold,
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Erase all the data?",
+                                    style: ThemeProvider.themeOf(context)
+                                        .data
+                                        .primaryTextTheme
+                                        .headline6
+                                        .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      height: 32,
+                                      width: 32,
+                                      decoration: BoxDecoration(
+                                        color: ThemeProvider.themeOf(context)
+                                            .data
+                                            .scaffoldBackgroundColor,
+                                        shape: BoxShape.circle,
+                                        boxShadow:
+                                            Neumorphism.boxShadow(context),
+                                      ),
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 16,
+                                        color: ThemeProvider.themeOf(context)
+                                            .data
+                                            .primaryTextTheme
+                                            .headline6
+                                            .color,
+                                      ),
                                     ),
+                                  )
+                                ],
                               ),
                               content: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,

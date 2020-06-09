@@ -143,11 +143,7 @@ class _BackFlipCardState extends State<BackFlipCard>
                   : AnimatedIcon(
                       icon: AnimatedIcons.play_pause,
                       progress: _iconController,
-                      color: _isSaving
-                          ? Colors.red[400]
-                          : ThemeProvider.themeOf(context).id == "light_theme"
-                              ? Colors.grey[400]
-                              : Colors.white,
+                      color: _isSaving ? Colors.red[400] : Colors.grey[400],
                       size: 96,
                     ),
             ),
