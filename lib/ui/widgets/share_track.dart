@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:Discover/models/level.dart';
 import 'package:Discover/models/track.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -42,9 +42,18 @@ Future<File> generateResume(Track track) async {
                       child: pw.Row(
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: <pw.Widget>[
-                          _InfoPDF(track: track),
-                          _InfoPDF(track: track),
-                          _InfoPDF(track: track),
+                          _InfoPDF(
+                            track: track,
+                            level: Level.HIGH,
+                          ),
+                          _InfoPDF(
+                            track: track,
+                            level: Level.AVG,
+                          ),
+                          _InfoPDF(
+                            track: track,
+                            level: Level.MIN,
+                          ),
                         ],
                       ),
                     ),
@@ -81,37 +90,7 @@ Future<pw.PageTheme> _myPageTheme() async {
           "assets/fonts/Quicksand-Regular.ttf",
         ),
       ),
-      bold: pw.Font.ttf(
-        await rootBundle.load(
-          "assets/fonts/Quicksand-Bold.ttf",
-        ),
-      ),
     ),
-    buildBackground: (pw.Context context) {
-      return pw.FullPage(
-        ignoreMargins: true,
-        child: pw.CustomPaint(
-          painter: (PdfGraphics canvas, PdfPoint size) {
-            context.canvas
-              ..setColor(PdfColors.lightBlue100)
-              ..moveTo(0, size.y)
-              ..lineTo(0, size.y - 230)
-              ..lineTo(60, size.y)
-              ..fillPath()
-              ..setColor(PdfColors.blue200)
-              ..moveTo(0, size.y)
-              ..lineTo(0, size.y - 100)
-              ..lineTo(100, size.y)
-              ..fillPath()
-              ..setColor(PdfColors.lightBlue200)
-              ..moveTo(30, size.y)
-              ..lineTo(110, size.y - 50)
-              ..lineTo(150, size.y)
-              ..fillPath();
-          },
-        ),
-      );
-    },
   );
 }
 
@@ -127,24 +106,14 @@ class _DataTitle extends pw.StatelessWidget {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: <pw.Widget>[
+        pw.SizedBox(
+          height: 16,
+        ),
         pw.Text(
           "Discover",
           style: pw.TextStyle(
             fontSize: 42,
             color: PdfColors.grey800,
-          ),
-        ),
-        pw.Padding(
-          padding: pw.EdgeInsets.symmetric(
-            vertical: 8,
-          ),
-          child: pw.Container(
-            width: 200,
-            height: 4,
-            decoration: pw.BoxDecoration(
-              borderRadius: 2,
-              color: PdfColors.grey800,
-            ),
           ),
         ),
         pw.Text(
@@ -216,9 +185,49 @@ class _GraphPDF extends pw.StatelessWidget {
 }
 
 class _InfoPDF extends pw.StatelessWidget {
-  _InfoPDF({this.track});
+  _InfoPDF({this.level, this.track});
 
+  final Level level;
   final Track track;
+
+  double buildVal(Level level, Track track) {
+    switch (level) {
+      case Level.HIGH:
+        return track.sound.reduce(max);
+      case Level.AVG:
+        return track.sound.reduce((a, b) => a + b) / track.sound.length;
+      case Level.MIN:
+        return track.sound.reduce(min);
+      default:
+        return null;
+    }
+  }
+
+  String buildText(Level level) {
+    switch (level) {
+      case Level.HIGH:
+        return "MAX";
+      case Level.AVG:
+        return "AVG";
+      case Level.MIN:
+        return "MIN";
+      default:
+        return null;
+    }
+  }
+
+  PdfColor buildColor(Level level) {
+    switch (level) {
+      case Level.HIGH:
+        return PdfColors.red600;
+      case Level.AVG:
+        return PdfColors.blue800;
+      case Level.MIN:
+        return PdfColors.green400;
+      default:
+        return null;
+    }
+  }
 
   @override
   pw.Widget build(pw.Context context) {
@@ -226,8 +235,46 @@ class _InfoPDF extends pw.StatelessWidget {
       width: 150,
       height: 150,
       decoration: pw.BoxDecoration(
-        color: PdfColors.indigoAccent,
+        color: buildColor(level),
         borderRadius: 25,
+      ),
+      child: pw.Center(
+        child: pw.Column(
+          mainAxisAlignment: pw.MainAxisAlignment.center,
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          children: <pw.Widget>[
+            pw.Padding(
+              padding: pw.EdgeInsets.symmetric(
+                horizontal: 24,
+              ),
+              child: pw.Row(
+                children: <pw.Widget>[
+                  pw.Text(
+                    buildVal(level, track).toStringAsFixed(0),
+                    style: pw.TextStyle(
+                      fontSize: 68,
+                      color: PdfColors.white,
+                    ),
+                  ),
+                  pw.Text(
+                    "db",
+                    style: pw.TextStyle(
+                      fontSize: 22,
+                      color: PdfColors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            pw.Text(
+              buildText(level),
+              style: pw.TextStyle(
+                fontSize: 18,
+                color: PdfColors.white,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:Discover/models/track.dart';
@@ -7,9 +8,9 @@ import 'package:Discover/ui/widgets/share_track.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 import 'effects/neumorphism.dart';
 
@@ -124,7 +125,15 @@ class SavedItem extends StatelessWidget {
                   ),
                   onTap: () async {
                     await generateResume(this.trk);
-                    OpenFile.open(await pathFile(this.trk));
+
+                    final File file = File(await pathFile(this.trk));
+
+                    await WcFlutterShare.share(
+                      sharePopupTitle: getTitle(this.trk),
+                      fileName: getTitle(this.trk) + ".pdf",
+                      mimeType: 'application/pdf',
+                      bytesOfFile: file.readAsBytesSync(),
+                    );
                   },
                 ),
               ],

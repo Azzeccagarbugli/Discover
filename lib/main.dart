@@ -31,8 +31,8 @@ class Discover extends StatelessWidget {
   Widget build(BuildContext context) {
     return ThemeProvider(
       themes: [
-        _customTheme.getDark(),
         _customTheme.getLight(),
+        _customTheme.getDark(),
       ],
       saveThemesOnChange: true,
       loadThemeOnInit: true,

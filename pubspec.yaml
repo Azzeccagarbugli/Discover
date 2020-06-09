@@ -31,7 +31,7 @@ dependencies:
   flutter_circular_text: ^0.3.0
   wave: ^0.0.8
   pdf: ^1.8.1
-  open_file: ^3.0.1
+  wc_flutter_share: ^0.2.2
 
 dev_dependencies:
   hive_generator: ^0.7.0+2

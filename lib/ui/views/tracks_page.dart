@@ -1,15 +1,15 @@
-import 'dart:math';
+import 'dart:io';
 
 import 'package:Discover/main.dart';
 import 'package:Discover/models/level.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/views/track_page.dart';
-import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
 import 'package:Discover/ui/widgets/effects/remove_glow_listview.dart';
 import 'package:Discover/ui/widgets/graph_tile_tracks.dart';
 import 'package:Discover/ui/widgets/lateral_action.dart';
 import 'package:Discover/ui/widgets/not_found.dart';
+import 'package:Discover/ui/widgets/share_track.dart';
 import 'package:Discover/ui/widgets/title_page.dart';
 import 'package:Discover/ui/widgets/track_item_list.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listview_utils/listview_utils.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 class TracksView extends StatefulWidget {
   @override
@@ -270,7 +271,18 @@ class _TracksViewState extends State<TracksView> {
                       closeOnTap: true,
                       icon: Icons.share,
                       pos: key,
-                      onTap: () {},
+                      onTap: () async {
+                        await generateResume(trk);
+
+                        final File file = File(await pathFile(trk));
+
+                        await WcFlutterShare.share(
+                          sharePopupTitle: getTitle(trk),
+                          fileName: getTitle(trk) + ".pdf",
+                          mimeType: 'application/pdf',
+                          bytesOfFile: file.readAsBytesSync(),
+                        );
+                      },
                       color: Colors.blue[600],
                     ),
                   ],

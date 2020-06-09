@@ -1,14 +1,18 @@
+import 'dart:io';
+
 import 'package:Discover/main.dart';
 import 'package:Discover/models/level.dart';
 import 'package:Discover/models/track.dart';
 import 'package:Discover/ui/widgets/bar_line.dart';
 import 'package:Discover/ui/widgets/card_info_db.dart';
 import 'package:Discover/ui/widgets/effects/neumorphism.dart';
+import 'package:Discover/ui/widgets/share_track.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 class CurrentTrackView extends StatefulWidget {
   final int indexKey;
@@ -115,7 +119,21 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
                                   .color,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () async {
+                            await generateResume(tracks.get(widget.indexKey));
+
+                            final File file = File(
+                                await pathFile(tracks.get(widget.indexKey)));
+
+                            await WcFlutterShare.share(
+                              sharePopupTitle:
+                                  getTitle(tracks.get(widget.indexKey)),
+                              fileName: getTitle(tracks.get(widget.indexKey)) +
+                                  ".pdf",
+                              mimeType: 'application/pdf',
+                              bytesOfFile: file.readAsBytesSync(),
+                            );
+                          },
                           useCache: true,
                         ),
                       ),
@@ -179,7 +197,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
       switch (x) {
         case 0:
           return Icon(
-            Icons.looks_one,
+            Icons.nature_people,
             color: ThemeProvider.themeOf(context)
                 .data
                 .primaryTextTheme
@@ -188,7 +206,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
           );
         case 2:
           return Icon(
-            Icons.looks_two,
+            Icons.record_voice_over,
             color: ThemeProvider.themeOf(context)
                 .data
                 .primaryTextTheme
@@ -197,7 +215,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
           );
         case 4:
           return Icon(
-            Icons.looks_3,
+            Icons.alarm,
             color: ThemeProvider.themeOf(context)
                 .data
                 .primaryTextTheme
@@ -206,7 +224,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
           );
         case 6:
           return Icon(
-            Icons.looks_4,
+            Icons.time_to_leave,
             color: ThemeProvider.themeOf(context)
                 .data
                 .primaryTextTheme
@@ -215,7 +233,7 @@ class _CurrentTrackViewState extends State<CurrentTrackView> {
           );
         case 8:
           return Icon(
-            Icons.looks_5,
+            Icons.airplanemode_active,
             color: ThemeProvider.themeOf(context)
                 .data
                 .primaryTextTheme
