@@ -19,6 +19,7 @@
 
 - [Getting started](#start)
 - [Application](#tecno)
+- [Contributing](#contr)
 
 # 📝 Getting started <a name = "start"></a>
 
@@ -38,4 +39,12 @@ The application created is designed to make its use **easy** and **interesting**
 - Full integration of **dark mode**
 - **Local storage** of the tracks
 - **Saving** of sound sessions
-- Creation of complete **PDF**
+- Generation of complete **PDF**
+
+# 🧰 Contributing <a name = "contr"></a>
+
+If you want to contribute to **Discover**, be sure to review the [contribution
+guidelines](CONTRIBUTING.md).
+
+This project will use [GitHub issues](https://github.com/azzeccagarbugli/discover/issues) for
+tracking **requests and bugs**, so please _don't use_ issues for general questions and discussion.
